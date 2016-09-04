@@ -1,0 +1,26 @@
+# A list of features to add
+
+- placehold.it
+  - http://placehold.it
+  - width
+    - int
+  - height
+    - int
+  - text color 
+    - 3 hex, 6 hex or css color name
+  - background color
+    - 3 hex, 6 hex or css color name
+  - text
+    - string
+- unsplash.it
+  - http://unsplash.it
+  - width
+    - int
+  - height
+    - int
+  - grayscale
+    - boolean
+  - blur
+    - boolean
+  - crop gravity
+    - north, east, south, west, center
