@@ -2,25 +2,40 @@
 
 - placehold.it
   - http://placehold.it
-  - width
-    - int
-  - height
-    - int
-  - text color 
-    - 3 hex, 6 hex or css color name
-  - background color
-    - 3 hex, 6 hex or css color name
-  - text
-    - string
+  - width (int)
+  - height (int)
+  - text color (3 hex, 6 hex or css color name)
+  - background color (3 hex, 6 hex or css color name)
+  - text (string)
 - unsplash.it
   - http://unsplash.it
-  - width
-    - int
-  - height
-    - int
-  - grayscale
-    - boolean
-  - blur
-    - boolean
-  - crop gravity
-    - north, east, south, west, center
+  - width (int)
+  - height (int)
+  - grayscale (boolean)
+  - blur (boolean)
+  - crop gravity (north, east, south, west, center)
+- placekitten
+  - http://placekitten.com
+  - width (int)
+  - height (int)
+  - grayscale (boolean)
+- LoremFlickr
+  - http://loremflickr.com
+  - width (int)
+  - height (int)
+  - grayscale (boolean)
+  - keyword (string)
+- LoremPixel
+  - http://lorempixel.com
+  - width (int)
+  - height (int)
+  - text (string)
+  - category (abstract, animals, business, cats, city, food, nightlife, fashion, people, nature, sports, technics, transport)
+- DummyImage
+  - http://dummyimage.com
+  - width (int)
+  - height (int)
+  - text color (3 hex, 6 hex or css color name)
+  - background color (3 hex, 6 hex or css color name)
+  - text (string)
+  - format (gif(default), png, jpg)
