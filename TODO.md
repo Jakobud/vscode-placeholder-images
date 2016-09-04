@@ -39,3 +39,24 @@
   - background color (3 hex, 6 hex or css color name)
   - text (string)
   - format (gif(default), png, jpg)
+- Fake Images Please
+  - http://fakeimg.pl
+  - width (int)
+  - height (int)
+  - text color (3 hex, 6 hex or css color names)
+  - text alpha color (int 0-255)
+  - background color (3 hex, 6 hex or css color names)
+  - background alpha color (int 0-255)
+  - text (string)
+  - font (lobster, bebas, museo)
+- placeskull
+  - http://placeskull.com
+  - width (int)
+  - height (int)
+  - background color (6 hex)
+  - skull id (int)
+  - print dimensions (boolean)
+- Pipsum.com
+  - http://pipsum.com
+  - width (int)
+  - height (int)
