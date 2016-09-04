@@ -1,4 +1,4 @@
-# A list of features to add
+# A list of services to support
 
 - placehold.it
   - http://placehold.it
@@ -60,3 +60,10 @@
   - http://pipsum.com
   - width (int)
   - height (int)
+
+# Extension command features
+ - Recently generated urls
+ - Start with service list alphabetical, and move the last used service to the top of the list when it's used
+ - Whenever filling in values, always save the last used value and use it as the default next time it's used.
+  - Not sure if this needs to be global or local scope to each individual service. Maybe a consistent default "width" for example for all services makes sense.
+  - If going with global scope, need to consider some services that support 3 color hex and some that only support 6 color hex. Might need to automatically convert 3 color hex codes to 6 color hex codes when necessary per service.
