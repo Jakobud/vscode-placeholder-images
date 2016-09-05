@@ -11,13 +11,14 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:placeholderImages.placeholderImage"
     ],
     "main": "./extension",
     "contributes": {
         "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
+            "command": "placeholderImages.placeholderImage",
+            "title": "Placeholder Image",
+            "description": "Insert a placeholder image"
         }]
     },
     "scripts": {

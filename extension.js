@@ -1,23 +1,29 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 function activate(context) {
 
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "placeholder-images" is now active!');
+    var disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', function() {
 
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with  registerCommand
-    // The commandId parameter must match the command field in package.json
-    var disposable = vscode.commands.registerCommand('extension.sayHello', function () {
-        // The code you place here will be executed every time your command is executed
+        var window = vscode.window;
+        var services = require('./services');
 
-        // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World!');
+        // Build array of services
+        var pickItems = [];
+        for (var index in services) {
+            if (services.hasOwnProperty(index)) {
+                var element = services[index];
+                pickItems.push(element.name);
+            }
+        }
+
+        // Services quick pick
+        window.showQuickPick(pickItems, {
+                "placeHolder": "Choose a Placeholder Image service"
+            })
+            .then(function(service) {
+                console.log(service);
+                console.log(services);
+            });
     });
 
     context.subscriptions.push(disposable);
@@ -25,6 +31,5 @@ function activate(context) {
 exports.activate = activate;
 
 // this method is called when your extension is deactivated
-function deactivate() {
-}
+function deactivate() {}
 exports.deactivate = deactivate;
