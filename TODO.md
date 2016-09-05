@@ -67,3 +67,16 @@
  - Whenever filling in values, always save the last used value and use it as the default next time it's used.
   - Not sure if this needs to be global or local scope to each individual service. Maybe a consistent default "width" for example for all services makes sense.
   - If going with global scope, need to consider some services that support 3 color hex and some that only support 6 color hex. Might need to automatically convert 3 color hex codes to 6 color hex codes when necessary per service.
+
+# Service popularity
+  - This is based off of Google Trends
+  - The lesser popular services don't have any data in Google Trends
+  1. LoremPixel
+  2. placekitten
+  3. placehold.it
+  4. DummyImage
+  5. LoremFlickr
+  6. Unsplash.it
+  7. Fake Images Please
+  8. placeskull
+  9. Pipsum
