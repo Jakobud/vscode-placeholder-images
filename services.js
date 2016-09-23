@@ -1,19 +1,47 @@
 module.exports = [{
-  'name': 'LoremPixel',
+  'label': 'LoremPixel',
+  'description': 'http://lorempixel.com',
+  'attributes': [{
+    'type': 'input',
+    'placeHolder': 'Width?'
+  }, {
+    'type': 'input',
+    'placeHolder': 'Height?'
+  }, {
+    'type': 'input',
+    'placeHolder': 'Text?'
+  }, {
+    'type': 'pick'
+  }]
 }, {
-  'name': 'placekitten'
+  'label': 'placekitten',
+  'description': 'http://placekitten.com'
 }, {
-  'name': 'placehold.it'
+  'label': 'placehold.it',
+  'description': 'http://placehold.it'
 }, {
-  'name': 'DummyImage'
+  'label': 'DummyImage',
+  'description': 'http://dummyimage.com'
 }, {
-  'name': 'LoremFlickr'
+  'label': 'LoremFlickr',
+  'description': 'http://loremflickr.com'
 }, {
-  'name': 'unsplash.it'
+  'label': 'unsplash.it',
+  'description': 'http://unsplash.it'
 }, {
-  'name': 'Fake Images Please'
+  'label': 'Fake Images Please',
+  'description': 'http://fakeimg.pl'
 }, {
-  'name': 'placeskull'
+  'label': 'placeskull',
+  'description': 'http://placeskull.com'
 }, {
-  'name': 'Pipsum'
+  'label': 'Pipsum',
+  'description': 'http://pipsum.com'
 }];
+
+// module.exports = {
+//   'placehold.it': {
+//     'label': 'placehold.it',
+//     'url': 'http://placehold.it'
+//   }
+// };

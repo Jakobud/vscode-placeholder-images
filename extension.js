@@ -7,26 +7,18 @@ function activate(context) {
         var window = vscode.window;
         var services = require('./services');
 
-        // Build array of services
-        var pickItems = [];
-        for (var index in services) {
-            if (services.hasOwnProperty(index)) {
-                var element = services[index];
-                pickItems.push(element.name);
-            }
-        }
+    // Services quick pick
+    window.showQuickPick(services, {
+        "placeHolder": "Choose a Placeholder Image service"
+      })
+      .then((service) => {
+        console.log(service);
+      }, (err) => {
+        console.error(err);
+      });
+  });
 
-        // Services quick pick
-        window.showQuickPick(pickItems, {
-                "placeHolder": "Choose a Placeholder Image service"
-            })
-            .then(function(service) {
-                console.log(service);
-                console.log(services);
-            });
-    });
-
-    context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
 }
 exports.activate = activate;
 
