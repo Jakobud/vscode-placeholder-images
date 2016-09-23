@@ -1,11 +1,11 @@
-var vscode = require('vscode');
+const vscode = require('vscode');
 
-function activate(context) {
+let activate = (context) => {
 
-    var disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', function() {
+  let window = vscode.window;
 
-        var window = vscode.window;
-        var services = require('./services');
+  let disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', () => {
+    let services = require('./services');
 
     // Services quick pick
     window.showQuickPick(services, {
@@ -23,5 +23,5 @@ function activate(context) {
 exports.activate = activate;
 
 // this method is called when your extension is deactivated
-function deactivate() {}
+let deactivate = () => {}
 exports.deactivate = deactivate;
