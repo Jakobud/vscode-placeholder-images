@@ -5,17 +5,22 @@ let activate = (context) => {
   let window = vscode.window;
 
   let disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', () => {
+
+    // Import services
     let services = require('./services');
 
+    // Choose from available services
     window.showQuickPick(services, {
       'placeHolder': 'Choose a Placeholder Image service'
     }).then((service) => {
 
+      // No service was chosen
       if (typeof(service) === 'undefined') {
         console.error('No placeholder service was chosen');
         return false;
       }
 
+      // Loop through service attributes
       let chain = service.attributes.reduce((previous, attribute) => {
 
         return previous.then((previousValue) => {
