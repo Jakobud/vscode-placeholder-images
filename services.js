@@ -2,16 +2,16 @@ module.exports = [{
   'label': 'LoremPixel',
   'description': 'http://lorempixel.com',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width?'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height?'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Text?'
   }, {
-    'type': 'select',
+    'action': 'select',
     'placeHolder': 'select a category',
     'items': [{
       'label': 'abstract'
@@ -43,54 +43,63 @@ module.exports = [{
   'label': 'placekitten',
   'description': 'http://placekitten.com',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height'
   }, {
-    'type': 'boolean',
+    'action': 'boolean',
     'placeHolder': 'Grayscale?'
   }]
 }, {
   'label': 'placehold.it',
   'description': 'http://placehold.it',
   'attributes': [{
-    'type': 'input',
-    'placeHolder': 'Width'
+    'action': 'input',
+    'placeHolder': 'Width? (example: 350)',
+    'type': 'int'
   }, {
-    'type': 'input',
-    'placeHolder': 'Height'
+    'action': 'input',
+    'placeHolder': 'Height? (example: 200)',
+    'type': 'int'
   }, {
-    'type': 'input',
-    'placeHolder': 'Text (optional)'
+    'action': 'input',
+    'placeHolder': 'Text (optional)',
+    'type': 'string',
+    'optional': true
   }, {
-    'type': 'input',
-    'placeHolder': 'Text Color (#RRGGBB)'
+    'action': 'input',
+    'placeHolder': 'Text Color (#RRGGBB)',
+    'type': 'string',
+    'optional': true
   }, {
-    'type': 'input',
-    'placeHolder': 'Background Color (#RRGGBB)'
-  }]
+    'action': 'input',
+    'placeHolder': 'Background Color (#RRGGBB)',
+    'type': 'string',
+    'optional': true
+  }],
+  'format': 'https://placehold.it/$0x$1'
 }, {
   'label': 'DummyImage',
   'description': 'http://dummyimage.com',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Text (optional)'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Text Color (#RRGGBB)'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Background Color (#RRGGBB)'
   }, {
-    'type': 'select',
+    'action': 'select',
     'placeHolder': 'Choose an image format',
     'items': [{
       'label': 'gif',
@@ -105,19 +114,19 @@ module.exports = [{
   'label': 'LoremFlickr',
   'description': 'http://loremflickr.com',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height'
   }, {
-    'type': 'boolean',
+    'action': 'boolean',
     'placeHolder': 'Grayscale?'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Enter an optional keyword'
   }, {
-    'type': 'select',
+    'action': 'select',
     'placeHolder': 'Select a modifer',
     'items': [{
       'label': 'Grayscale'
@@ -135,19 +144,19 @@ module.exports = [{
   'label': 'unsplash.it',
   'description': 'http://unsplash.it',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height'
   }, {
-    'type': 'boolean',
+    'action': 'boolean',
     'placeHolder': 'Grayscale?'
   }, {
-    'type': 'boolean',
+    'action': 'boolean',
     'placeHolder': 'Blur?'
   }, {
-    'type': 'select',
+    'action': 'select',
     'placeHolder': 'Crop Gravity',
     'items': [{
       'label': 'North'
@@ -165,28 +174,28 @@ module.exports = [{
   'label': 'Fake Images Please',
   'description': 'http://fakeimg.pl',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Text (optional)'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Text Color (#RRGGBB)'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Text Alpha (0-255)'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Background Color (#RRGGBB)'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Background Alpha (0-255)'
   }, {
-    'type': 'select',
+    'action': 'select',
     'placeHolder': 'Choose a font',
     'items': [{
       'label': 'Lobster',
@@ -201,19 +210,19 @@ module.exports = [{
   'label': 'placeskull',
   'description': 'http://placeskull.com',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Skull id (0-25?)'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Background Color (#RRGGBB)'
   }, {
-    'type': 'boolean',
+    'action': 'boolean',
     'placeHolder': 'Pring image dimensions?',
     'items': [{
       'label': 'Yes',
@@ -225,10 +234,10 @@ module.exports = [{
   'label': 'Pipsum',
   'description': 'http://pipsum.com',
   'attributes': [{
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Width'
   }, {
-    'type': 'input',
+    'action': 'input',
     'placeHolder': 'Height'
   }]
 }];
