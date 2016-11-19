@@ -1,13 +1,36 @@
 const vscode = require('vscode');
+const window = vscode.window;
 
 let activate = (context) => {
-
-  let window = vscode.window;
 
   let disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', () => {
 
     // Import services
     let services = require('./services');
+
+    var sum = 0,
+      stop = 10;
+
+    promiseWhile(function () {
+      // Condition for stopping
+      return sum < stop;
+    }, function () {
+      // The function to run, should return a promise
+      return new Promise(function (resolve, reject) {
+        // Arbitrary 250ms async method to simulate async process
+        setTimeout(function () {
+          sum++;
+          // Print out the sum thus far to show progress
+          console.log(sum);
+          resolve();
+        }, 2000);
+      });
+    }).then(function () {
+      // Notice we can chain it because it's a Promise, this will run after completion of the promiseWhile Promise!
+      console.log("Done");
+    });
+
+    return false;
 
     // Choose from available services
     window.showQuickPick(services, {
@@ -15,7 +38,7 @@ let activate = (context) => {
     }).then((service) => {
 
       // No service was chosen
-      if (typeof(service) === 'undefined') {
+      if (typeof (service) === 'undefined') {
         console.error('No placeholder service was chosen');
         return false;
       }
@@ -27,54 +50,22 @@ let activate = (context) => {
           return new Promise((resolve, reject) => {
 
             // Take appropriate action for attribute type
-            switch (attribute.type) {
+            switch (attribute.action) {
 
               case 'input':
-                // Input attribute value
-                window.showInputBox({
-                  placeHolder: attribute.placeHolder
-                }).then((value) => {
 
-                  // No input was specified
-                  if (typeof(value) === 'undefined') {
-                    reject('No input value was specified');
-                    return false;
-                  }
-
-                  console.log(typeof(value));
-                  value = parseInt(value);
-                  console.log(typeof(value));
-                  attribute.value = value;
-                  resolve();
-
-                }, (err) => {
-                  reject(err);
-                });
-
-                break;
+                return inputAttributeAction(attribute, resolve, reject);
 
               case 'select':
-                // Pick attribute value
-                window.showQuickPick(attribute.items, {
-                  placeHolder: attribute.placeHolder
-                }).then((value) => {
 
-                  if (typeof(value) === 'undefined') {
-                    reject('No value was selected');
-                    return false;
-                  }
-
-                  attribute.value = value;
-                  resolve();
-
-                }, (err) => {
-                  reject(err);
-                })
-
-                break;
+                return selectAttributeAction(attribute, resolve, reject);
 
               default:
                 break;
+            }
+
+            if (result.success === false) {
+              return reject(result.reason);
             }
 
           });
@@ -98,6 +89,72 @@ let activate = (context) => {
 }
 exports.activate = activate;
 
+const inputAttributeAction = (attribute, resolve, reject) => {
+
+  // Input attribute value
+  window.showInputBox({
+    placeHolder: attribute.placeHolder
+  }).then((value) => {
+
+    // No input was specified
+    if (typeof (value) === 'undefined') {
+      return reject('No input value specified');
+    }
+
+    // If integer type
+    if (attribute.type === 'int') {
+      value.replace(' ', '');
+      value = parseInt(value);
+    }
+
+    // Is the value a value integer
+    if (value !== null && value >= 0) {
+      return resolve(value);
+    } else {
+
+    }
+
+  }, (err) => {
+    return reject(err);
+  });
+
+}
+
+const selectAttributeAction = (attribute) => {
+
+  // Pick attribute value
+  window.showQuickPick(attribute.items, {
+    placeHolder: attribute.placeHolder
+  }).then((value) => {
+
+    if (typeof (value) === 'undefined') {
+      return reject('No value was selected');
+    }
+
+    attribute.value = value;
+    return resolve();
+
+  }, (err) => {
+    return reject(err);
+  })
+
+}
+
+const promiseWhile = function (condition, action) {
+
+  let loop = function () {
+    if (!condition()) return Promise.resolve();
+    return Promise.resolve(action())
+      .then(loop)
+      .catch(Promise.reject);
+  };
+
+  process.nextTick(loop);
+
+  return new Promise();
+};
+
+
 // this method is called when your extension is deactivated
-let deactivate = () => {}
+let deactivate = () => { }
 exports.deactivate = deactivate;
