@@ -1,4 +1,6 @@
 const vscode = require('vscode');
+const Promise = require('bluebird');
+
 const window = vscode.window;
 
 let activate = (context) => {
