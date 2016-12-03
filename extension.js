@@ -1,5 +1,6 @@
 const vscode = require('vscode');
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 const window = vscode.window;
 
