@@ -1,39 +1,19 @@
 const vscode = require('vscode');
+const window = vscode.window;
+
 const Promise = require('bluebird');
 const _ = require('lodash');
 
-const window = vscode.window;
+// Import services
+const servicesData = require('./services');
+let services = [];
+for (let key of Object.keys(servicesData)) {
+  services.push(servicesData[key]);
+}
 
 let activate = (context) => {
 
   let disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', () => {
-
-    // Import services
-    let services = require('./services');
-
-    var sum = 0,
-      stop = 10;
-
-    promiseWhile(function () {
-      // Condition for stopping
-      return sum < stop;
-    }, function () {
-      // The function to run, should return a promise
-      return new Promise(function (resolve, reject) {
-        // Arbitrary 250ms async method to simulate async process
-        setTimeout(function () {
-          sum++;
-          // Print out the sum thus far to show progress
-          console.log(sum);
-          resolve();
-        }, 2000);
-      });
-    }).then(function () {
-      // Notice we can chain it because it's a Promise, this will run after completion of the promiseWhile Promise!
-      console.log("Done");
-    });
-
-    return false;
 
     // Choose from available services
     window.showQuickPick(services, {
@@ -46,8 +26,11 @@ let activate = (context) => {
         return false;
       }
 
+      // Clone the service object
+      service = _.cloneDeep(service);
+
       // Loop through service attributes
-      let chain = service.attributes.reduce((previous, attribute) => {
+      let chain = service.attributes.reduce((previous, attribute, index) => {
 
         return previous.then((previousValue) => {
           return new Promise((resolve, reject) => {
@@ -55,20 +38,20 @@ let activate = (context) => {
             // Take appropriate action for attribute type
             switch (attribute.action) {
 
+              // Input attribute
               case 'input':
+                return inputAttributeAction(service, index, resolve, reject);
 
-                return inputAttributeAction(attribute, resolve, reject);
-
+              // Select attribute
               case 'select':
+                return selectAttributeAction(service, index, resolve, reject);
 
-                return selectAttributeAction(attribute, resolve, reject);
+              // Select Yes/No attribute
+              case 'boolean':
+                return booleanAttributeAction(service, index, resolve, reject);
 
               default:
                 break;
-            }
-
-            if (result.success === false) {
-              return reject(result.reason);
             }
 
           });
@@ -78,7 +61,9 @@ let activate = (context) => {
 
       // End of the reducer chain
       chain.then(() => {
+
         console.log(service);
+
       }).catch((err) => {
         console.error(err);
       })
@@ -92,38 +77,81 @@ let activate = (context) => {
 }
 exports.activate = activate;
 
-const inputAttributeAction = (attribute, resolve, reject) => {
+const inputAttributeAction = (service, index, resolve, reject) => {
 
-  // Input attribute value
-  window.showInputBox({
-    placeHolder: attribute.placeHolder
-  }).then((value) => {
+  const attribute = service.attributes[index];
 
-    // No input was specified
-    if (typeof (value) === 'undefined') {
-      return reject('No input value specified');
-    }
+  // Add optional to placeHolder
+  const placeHolder = attribute.optional ? attribute.placeHolder + ' (optional)' : attribute.placeHolder;
 
-    // If integer type
-    if (attribute.type === 'int') {
-      value.replace(' ', '');
-      value = parseInt(value);
-    }
+  let next = false;
+  promiseWhile(() => {
+    return !next;
+  }, () => {
 
-    // Is the value a value integer
-    if (value !== null && value >= 0) {
-      return resolve(value);
-    } else {
+    return new Promise((resolve, reject) => {
 
-    }
+      window.showInputBox({
+        placeHolder: placeHolder
+      }).then((value) => {
 
-  }, (err) => {
-    return reject(err);
+        // No input was specified
+        if (typeof (value) === 'undefined') {
+          return reject('No input value specified');
+        }
+
+        // Trim the specified value
+        value = value.trim();
+
+        // Validation via regex
+        const regexType = new RegExp(attribute.regex);
+
+        // Regex test or is the value optional
+        if (regexType.test(value)) {
+
+          // Optional value formatting
+          if (attribute.format) {
+            value = attribute.format(value);
+          }
+
+          //Replace url placeholder
+          service.url = service.url.replace('$' + index, value);
+
+          // Move to the next attribute
+          next = true;
+
+          // Accept if value is optional
+        } else if (attribute.optional === true && value.length === 0) {
+
+          // Replace url placeholder
+          service.url = service.url.replace('$' + index, '');
+
+          // Move to the next attribute
+          next = true;
+        }
+
+        return resolve();
+
+      }, (err) => {
+        return reject(err);
+      });
+
+    });
+  }).then(() => {
+    return resolve();
+  }).catch((err) => {
+    console.error(err);
   });
 
 }
 
-const selectAttributeAction = (attribute) => {
+const selectAttributeAction = (service, index, resolve, reject) => {
+
+  const attribute = service.attributes[index];
+
+  if (attribute.optional) {
+    attribute.items.push('None');
+  }
 
   // Pick attribute value
   window.showQuickPick(attribute.items, {
@@ -134,7 +162,26 @@ const selectAttributeAction = (attribute) => {
       return reject('No value was selected');
     }
 
-    attribute.value = value;
+    // Ignore value
+    if (value.label === 'None') {
+
+      // Remove url placeholder
+      service.url = service.url.replace('$' + index, '');
+
+    } else {
+
+      // Optional value formatting
+      if (attribute.format) {
+        value = attribute.format(value.label);
+      }
+
+      // Replace url placeholder
+      service.url = service.url.replace('$' + index, value);
+
+    }
+
+    console.log(service.url);
+
     return resolve();
 
   }, (err) => {
@@ -143,20 +190,51 @@ const selectAttributeAction = (attribute) => {
 
 }
 
-const promiseWhile = function (condition, action) {
+const booleanAttributeAction = (service, index, resolve, reject) => {
 
-  let loop = function () {
-    if (!condition()) return Promise.resolve();
-    return Promise.resolve(action())
-      .then(loop)
-      .catch(Promise.reject);
-  };
+  const attribute = service.attributes[index];
 
-  process.nextTick(loop);
+  // Pick attribute value
+  window.showQuickPick(['Yes', 'No'], {
+    placeHolder: attribute.placeHolder
+  }).then((value) => {
 
-  return new Promise();
-};
+    if (typeof (value) === 'undefined') {
+      return reject('No value was selected');
+    }
 
+    if (value === 'Yes') {
+
+      // Optional value formatting
+      if (attribute.format) {
+        value = attribute.format(value);
+      }
+
+      // Replace url placeholder with value
+      service.url = service.url.replace('$' + index, value);
+
+    } else {
+
+      // Remove url placeholder
+      service.url = service.url.replace('$' + index, '');
+
+    }
+
+    return resolve();
+
+  }, (err) => {
+    return reject(err);
+  })
+
+}
+
+const promiseWhile = (predicate, action) => {
+  function loop() {
+    if (!predicate()) return;
+    return Promise.resolve(action()).then(loop);
+  }
+  return Promise.resolve().then(loop);
+}
 
 // this method is called when your extension is deactivated
 let deactivate = () => { }
