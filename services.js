@@ -1,244 +1,304 @@
-module.exports = [
-  {
-    'label': 'LoremPixel',
-    'description': 'http://lorempixel.com',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width?'
+const services = {
+  'lorempixel': {
+    label: 'LoremPixel',
+    description: 'http://lorempixel.com',
+    url: 'http://lorempixel.com/$4$0$1$2$3',
+    attributes: [{
+      placeHolder: 'Width?',
+      action: 'input',
+      regex: '^\\d+$'
     }, {
-      'action': 'input',
-      'placeHolder': 'Height?'
+      placeHolder: 'Height?',
+      action: 'input',
+      regex: '^\\d+$',
+      optional: true,
+      format: function (value) {
+        return '/' + value;
+      }
     }, {
-      'action': 'input',
-      'placeHolder': 'Text?'
+      action: 'select',
+      placeHolder: 'Category?',
+      optional: true,
+      items: [{
+        label: 'abstract'
+      }, {
+        label: 'animals'
+      }, {
+        label: 'business'
+      }, {
+        label: 'cats'
+      }, {
+        label: 'city'
+      }, {
+        label: 'food'
+      }, {
+        label: 'nightlife'
+      }, {
+        label: 'fashion'
+      }, {
+        label: 'people'
+      }, {
+        label: 'nature'
+      }, {
+        label: 'sports'
+      }, {
+        label: 'technics'
+      }],
+      format: function (value) {
+        return '/' + value;
+      }
     }, {
-      'action': 'select',
-      'placeHolder': 'select a category',
-      'items': [{
-        'label': 'abstract'
+      placeHolder: 'Text?',
+      action: 'input',
+      regex: '^.+$',
+      optional: true,
+      format: function (value) {
+        return '/' + encodeURIComponent(value);;
+      }
+    }, {
+      placeHolder: 'Greyscale?',
+      action: 'boolean',
+      format: function (value) {
+        return 'g/';
+      }
+    }]
+  },
+  'placekitten': {
+    label: 'placekitten',
+    description: 'http://placekitten.com',
+    url: 'http://placekitten.com/$2$0$1',
+    attributes: [{
+      placeHolder: 'Width?',
+      action: 'input',
+      regex: '^\\d+$'
+    }, {
+      placeHolder: 'Height?',
+      action: 'input',
+      regex: '^\\d+$',
+      optional: true,
+      format: function (value) {
+        return '/' + value
+      }
+    }, {
+      placeHolder: 'Grayscale?',
+      action: 'boolean',
+      format: function (value) {
+        return 'g/'
+      }
+    }]
+  },
+  'placehold.it': {
+    label: 'placehold.it',
+    description: 'https://placehold.it',
+    url: 'https://placehold.it/$0$1$4$3$2',
+    attributes: [{
+      placeHolder: 'Width?',
+      action: 'input',
+      regex: '^\\d+$'
+    },
+    {
+      placeHolder: 'Height?',
+      action: 'input',
+      optional: true,
+      regex: '^\\d+$',
+      format: function (value) {
+        return 'x' + value;
+      }
+    },
+    {
+      placeHolder: 'Text?',
+      action: 'input',
+      optional: true,
+      regex: '^.+$',
+      format: function (value) {
+        return '?text=' + encodeURIComponent(value);
+      }
+    },
+    {
+      action: 'input',
+      placeHolder: 'Text Color (#RRGGBB)?',
+      optional: true,
+      regex: '^#([A-Fa-f0-9]{6})$',
+      format: function (value) {
+        return '/' + value.replace('#', '');
+      }
+    },
+    {
+      action: 'input',
+      placeHolder: 'Background Color (#RRGGBB)?',
+      optional: true,
+      regex: '^#([A-Fa-f0-9]{6})$',
+      format: function (value) {
+        return '/' + value.replace('#', '');
+      }
+    }]
+  },
+  'dummy-image': {
+    label: 'DummyImage',
+    description: 'http://dummyimage.com',
+    attributes: [{
+      action: 'input',
+      placeHolder: 'Width'
+    }, {
+      action: 'input',
+      placeHolder: 'Height'
+    }, {
+      action: 'input',
+      placeHolder: 'Text (optional)'
+    }, {
+      action: 'input',
+      placeHolder: 'Text Color (#RRGGBB)'
+    }, {
+      action: 'input',
+      placeHolder: 'Background Color (#RRGGBB)'
+    }, {
+      action: 'select',
+      placeHolder: 'Choose an image format',
+      items: [{
+        label: 'gif',
+        description: '(default)'
       }, {
-        'label': 'animals'
+        label: 'png'
       }, {
-        'label': 'business'
-      }, {
-        'label': 'cats'
-      }, {
-        'label': 'city'
-      }, {
-        'label': 'food'
-      }, {
-        'label': 'nightlife'
-      }, {
-        'label': 'fashion'
-      }, {
-        'label': 'people'
-      }, {
-        'label': 'nature'
-      }, {
-        'label': 'sports'
-      }, {
-        'label': 'technics'
+        label: 'jpg'
       }]
     }]
-  }, {
-    'label': 'placekitten',
-    'description': 'http://placekitten.com',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width'
+  },
+  'lorem-flickr': {
+    label: 'LoremFlickr',
+    description: 'http://loremflickr.com',
+    attributes: [{
+      action: 'input',
+      placeHolder: 'Width'
     }, {
-      'action': 'input',
-      'placeHolder': 'Height'
+      action: 'input',
+      placeHolder: 'Height'
     }, {
-      'action': 'boolean',
-      'placeHolder': 'Grayscale?'
-    }]
-  }, {
-    'label': 'placehold.it',
-    'description': 'http://placehold.it',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width? (example: 350)',
-      'type': 'int'
+      action: 'boolean',
+      placeHolder: 'Grayscale?'
     }, {
-      'action': 'input',
-      'placeHolder': 'Height? (example: 200)',
-      'type': 'int'
+      action: 'input',
+      placeHolder: 'Enter an optional keyword'
     }, {
-      'action': 'input',
-      'placeHolder': 'Text (optional)',
-      'type': 'string',
-      'optional': true
-    }, {
-      'action': 'input',
-      'placeHolder': 'Text Color (#RRGGBB)',
-      'type': 'string',
-      'optional': true
-    }, {
-      'action': 'input',
-      'placeHolder': 'Background Color (#RRGGBB)',
-      'type': 'string',
-      'optional': true
-    }],
-    'format': 'https://placehold.it/$0x$1'
-  }, {
-    'label': 'DummyImage',
-    'description': 'http://dummyimage.com',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Height'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Text (optional)'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Text Color (#RRGGBB)'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Background Color (#RRGGBB)'
-    }, {
-      'action': 'select',
-      'placeHolder': 'Choose an image format',
-      'items': [{
-        'label': 'gif',
-        'description': '(default)'
+      action: 'select',
+      placeHolder: 'Select a modifer',
+      items: [{
+        label: 'Grayscale'
       }, {
-        'label': 'png'
+        label: 'p?'
       }, {
-        'label': 'jpg'
+        label: 'Red'
+      }, {
+        label: 'Green'
+      }, {
+        label: 'Blue'
       }]
     }]
-  }, {
-    'label': 'LoremFlickr',
-    'description': 'http://loremflickr.com',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width'
+  },
+  'unsplash.it': {
+    label: 'unsplash.it',
+    description: 'http://unsplash.it',
+    attributes: [{
+      action: 'input',
+      placeHolder: 'Width'
     }, {
-      'action': 'input',
-      'placeHolder': 'Height'
+      action: 'input',
+      placeHolder: 'Height'
     }, {
-      'action': 'boolean',
-      'placeHolder': 'Grayscale?'
+      action: 'boolean',
+      placeHolder: 'Grayscale?'
     }, {
-      'action': 'input',
-      'placeHolder': 'Enter an optional keyword'
+      action: 'boolean',
+      placeHolder: 'Blur?'
     }, {
-      'action': 'select',
-      'placeHolder': 'Select a modifer',
-      'items': [{
-        'label': 'Grayscale'
+      action: 'select',
+      placeHolder: 'Crop Gravity',
+      items: [{
+        label: 'North'
       }, {
-        'label': 'p?'
+        label: 'East'
       }, {
-        'label': 'Red'
+        label: 'South'
       }, {
-        'label': 'Green'
+        label: 'West'
       }, {
-        'label': 'Blue'
+        label: 'Center'
       }]
     }]
-  }, {
-    'label': 'unsplash.it',
-    'description': 'http://unsplash.it',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width'
+  },
+  'fake-images-please': {
+    label: 'Fake Images Please',
+    description: 'http://fakeimg.pl',
+    attributes: [{
+      action: 'input',
+      placeHolder: 'Width'
     }, {
-      'action': 'input',
-      'placeHolder': 'Height'
+      action: 'input',
+      placeHolder: 'Height'
     }, {
-      'action': 'boolean',
-      'placeHolder': 'Grayscale?'
+      action: 'input',
+      placeHolder: 'Text (optional)'
     }, {
-      'action': 'boolean',
-      'placeHolder': 'Blur?'
+      action: 'input',
+      placeHolder: 'Text Color (#RRGGBB)'
     }, {
-      'action': 'select',
-      'placeHolder': 'Crop Gravity',
-      'items': [{
-        'label': 'North'
+      action: 'input',
+      placeHolder: 'Text Alpha (0-255)'
+    }, {
+      action: 'input',
+      placeHolder: 'Background Color (#RRGGBB)'
+    }, {
+      action: 'input',
+      placeHolder: 'Background Alpha (0-255)'
+    }, {
+      action: 'select',
+      placeHolder: 'Choose a font',
+      items: [{
+        label: 'Lobster',
+        description: '(default)'
       }, {
-        'label': 'East'
+        label: 'Bebas'
       }, {
-        'label': 'South'
-      }, {
-        'label': 'West'
-      }, {
-        'label': 'Center'
+        label: 'Museo'
       }]
     }]
-  }, {
-    'label': 'Fake Images Please',
-    'description': 'http://fakeimg.pl',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width'
+  },
+  'placeskull': {
+    label: 'placeskull',
+    description: 'http://placeskull.com',
+    attributes: [{
+      action: 'input',
+      placeHolder: 'Width'
     }, {
-      'action': 'input',
-      'placeHolder': 'Height'
+      action: 'input',
+      placeHolder: 'Height'
     }, {
-      'action': 'input',
-      'placeHolder': 'Text (optional)'
+      action: 'input',
+      placeHolder: 'Skull id (0-25?)'
     }, {
-      'action': 'input',
-      'placeHolder': 'Text Color (#RRGGBB)'
+      action: 'input',
+      placeHolder: 'Background Color (#RRGGBB)'
     }, {
-      'action': 'input',
-      'placeHolder': 'Text Alpha (0-255)'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Background Color (#RRGGBB)'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Background Alpha (0-255)'
-    }, {
-      'action': 'select',
-      'placeHolder': 'Choose a font',
-      'items': [{
-        'label': 'Lobster',
-        'description': '(default)'
+      action: 'boolean',
+      placeHolder: 'Pring image dimensions?',
+      items: [{
+        label: 'Yes',
       }, {
-        'label': 'Bebas'
-      }, {
-        'label': 'Museo'
+        label: 'No'
       }]
     }]
-  }, {
-    'label': 'placeskull',
-    'description': 'http://placeskull.com',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width'
+  },
+  'pipsum': {
+    label: 'Pipsum',
+    description: 'http://pipsum.com',
+    attributes: [{
+      action: 'input',
+      placeHolder: 'Width'
     }, {
-      'action': 'input',
-      'placeHolder': 'Height'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Skull id (0-25?)'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Background Color (#RRGGBB)'
-    }, {
-      'action': 'boolean',
-      'placeHolder': 'Pring image dimensions?',
-      'items': [{
-        'label': 'Yes',
-      }, {
-        'label': 'No'
-      }]
+      action: 'input',
+      placeHolder: 'Height'
     }]
-  }, {
-    'label': 'Pipsum',
-    'description': 'http://pipsum.com',
-    'attributes': [{
-      'action': 'input',
-      'placeHolder': 'Width'
-    }, {
-      'action': 'input',
-      'placeHolder': 'Height'
-    }]
-  }];
+  }
+};
+
+module.exports = services;
