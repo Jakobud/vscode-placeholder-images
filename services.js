@@ -115,8 +115,8 @@ const services = {
       }
     },
     {
-      action: 'input',
       placeHolder: 'Text Color (#RRGGBB)?',
+      action: 'input',
       optional: true,
       regex: '^#([A-Fa-f0-9]{6})$',
       format: function (value) {
@@ -124,8 +124,8 @@ const services = {
       }
     },
     {
-      action: 'input',
       placeHolder: 'Background Color (#RRGGBB)?',
+      action: 'input',
       optional: true,
       regex: '^#([A-Fa-f0-9]{6})$',
       format: function (value) {
