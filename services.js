@@ -136,31 +136,51 @@ const services = {
   'dummy-image': {
     label: 'DummyImage',
     description: 'http://dummyimage.com',
+    url: 'https://dummyimage.com/$0$1$4$3$5$2',
     attributes: [{
+      placeHolder: 'Width?',
       action: 'input',
-      placeHolder: 'Width'
+      regex: '^\\d+$'
     }, {
+      placeHolder: 'Height?',
       action: 'input',
-      placeHolder: 'Height'
+      regex: '^\\d+$',
+      format: function (value) {
+        return 'x' + value;
+      }
     }, {
+      placeHolder: 'Text?',
       action: 'input',
-      placeHolder: 'Text (optional)'
+      regex: '^.+$',
+      optional: true,
+      format: function (value) {
+        return '?text=' + encodeURIComponent(value);
+      }
     }, {
+      placeHolder: 'Text Color (#RRGGBB)?',
       action: 'input',
-      placeHolder: 'Text Color (#RRGGBB)'
+      optional: true,
+      regex: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+      format: function (value) {
+        return '/' + value.replace('#', '');
+      }
     }, {
+      placeHolder: 'Background Color (#RRGGBB)?',
       action: 'input',
-      placeHolder: 'Background Color (#RRGGBB)'
+      optional: true,
+      regex: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+      format: function (value) {
+        return '/' + value.replace('#', '');
+      }
     }, {
       action: 'select',
-      placeHolder: 'Choose an image format',
+      placeHolder: 'Image type?',
       items: [{
-        label: 'gif',
-        description: '(default)'
+        label: '.gif'
       }, {
-        label: 'png'
+        label: '.png'
       }, {
-        label: 'jpg'
+        label: '.jpg'
       }]
     }]
   },
