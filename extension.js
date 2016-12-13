@@ -149,6 +149,7 @@ const selectAttributeAction = (service, index, resolve, reject) => {
 
   const attribute = service.attributes[index];
 
+  // Add 'None' item if attribute is optional
   if (attribute.optional) {
     attribute.items.push('None');
   }
@@ -181,8 +182,6 @@ const selectAttributeAction = (service, index, resolve, reject) => {
       service.url = service.url.replace('$' + index, value);
 
     }
-
-    console.log(service.url);
 
     return resolve();
 
