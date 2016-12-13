@@ -162,8 +162,10 @@ const selectAttributeAction = (service, index, resolve, reject) => {
       return reject('No value was selected');
     }
 
+    value = value.value;
+
     // Ignore value
-    if (value.label === 'None') {
+    if (value === 'None') {
 
       // Remove url placeholder
       service.url = service.url.replace('$' + index, '');
@@ -172,7 +174,7 @@ const selectAttributeAction = (service, index, resolve, reject) => {
 
       // Optional value formatting
       if (attribute.format) {
-        value = attribute.format(value.label);
+        value = attribute.format(value);
       }
 
       // Replace url placeholder

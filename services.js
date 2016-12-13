@@ -20,29 +20,41 @@ const services = {
       placeHolder: 'Category?',
       optional: true,
       items: [{
-        label: 'abstract'
+        label: 'Abstract',
+        value: 'abstract'
       }, {
-        label: 'animals'
+        label: 'Animals',
+        value: 'animals'
       }, {
-        label: 'business'
+        label: 'Business',
+        value: 'business'
       }, {
-        label: 'cats'
+        label: 'Cats',
+        value: 'cats'
       }, {
-        label: 'city'
+        label: 'City',
+        value: 'city'
       }, {
-        label: 'food'
+        label: 'Food',
+        value: 'food'
       }, {
-        label: 'nightlife'
+        label: 'Nightlife',
+        value: 'nightlife'
       }, {
-        label: 'fashion'
+        label: 'Fashion',
+        value: 'fashion'
       }, {
-        label: 'people'
+        label: 'People',
+        value: 'people'
       }, {
-        label: 'nature'
+        label: 'Nature',
+        value: 'nature'
       }, {
-        label: 'sports'
+        label: 'Sports',
+        value: 'sports'
       }, {
-        label: 'technics'
+        label: 'Technics',
+        value: 'technics'
       }],
       format: function (value) {
         return '/' + value;
@@ -176,11 +188,14 @@ const services = {
       action: 'select',
       placeHolder: 'Image type?',
       items: [{
-        label: '.gif'
+        label: 'gif',
+        value: '.gif'
       }, {
-        label: '.png'
+        label: 'png',
+        value: '.png'
       }, {
-        label: '.jpg'
+        label: 'jpg',
+        value: '.jpg'
       }]
     }]
   },
@@ -203,16 +218,20 @@ const services = {
       action: 'select',
       placeHolder: 'Select a modifer',
       items: [{
-        label: 'Grayscale'
+        label: 'Grayscale',
+        value: 'g'
       }, {
-        label: 'p?'
+        label: 'Pixelated',
+        value: 'p'
       }, {
-        label: 'Red'
+        label: 'Red overlay',
+        value: 'red'
       }, {
-        label: 'Green'
+        label: 'Green overlay',
+        value: 'green'
       }, {
-        label: 'Blue'
-      }]
+        label: 'Blue overlay',
+        value: 'blue'
     }]
   },
   'unsplash.it': {
