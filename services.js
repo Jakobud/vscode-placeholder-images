@@ -202,21 +202,33 @@ const services = {
   'lorem-flickr': {
     label: 'LoremFlickr',
     description: 'http://loremflickr.com',
+    url: 'http://loremflickr.com$3$0$1$2',
     attributes: [{
+      placeHolder: 'Width?',
       action: 'input',
-      placeHolder: 'Width'
+      regex: '^\\d+$',
+      format: function (value) {
+        return '/' + value;
+      }
     }, {
+      placeHolder: 'Height?',
       action: 'input',
-      placeHolder: 'Height'
+      regex: '^\\d+$',
+      format: function (value) {
+        return '/' + value;
+      }
     }, {
-      action: 'boolean',
-      placeHolder: 'Grayscale?'
-    }, {
+      placeHolder: 'Search for Flickr keyword',
       action: 'input',
-      placeHolder: 'Enter an optional keyword'
+      optional: true,
+      regex: '^.+$',
+      format: function (value) {
+        return '/' + value;
+      }
     }, {
       action: 'select',
       placeHolder: 'Select a modifer',
+      optional: true,
       items: [{
         label: 'Grayscale',
         value: 'g'
@@ -232,6 +244,10 @@ const services = {
       }, {
         label: 'Blue overlay',
         value: 'blue'
+      }],
+      format: function (value) {
+        return '/' + value;
+      }
     }]
   },
   'unsplash.it': {
