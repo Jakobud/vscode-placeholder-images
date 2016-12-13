@@ -346,12 +346,18 @@ const services = {
   'pipsum': {
     label: 'Pipsum',
     description: 'http://pipsum.com',
+    url: 'http://pipsum.com/$0$1',
     attributes: [{
+      placeHolder: 'Width?',
       action: 'input',
-      placeHolder: 'Width'
+      regex: '^\\d+$'
     }, {
+      placeHolder: 'Height?',
       action: 'input',
-      placeHolder: 'Height'
+      regex: '^\\d+$',
+      format: function (value) {
+        return 'x' + value + '.jpg';
+      }
     }]
   }
 };
