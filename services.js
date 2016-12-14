@@ -285,29 +285,40 @@ const services = {
     label: 'Fake Images Please',
     description: 'http://fakeimg.pl',
     attributes: [{
+      placeHolder: 'Width?',
       action: 'input',
-      placeHolder: 'Width'
+      regex: '^\\d+$'
     }, {
+      placeHolder: 'Height?',
       action: 'input',
-      placeHolder: 'Height'
+      optional: true,
+      regex: '^\\d+$',
+      format: function (value) {
+        return 'x' + value;
+      }
     }, {
+      placeHolder: 'Text?',
       action: 'input',
-      placeHolder: 'Text (optional)'
+      optional: true,
+      regex: '^.+$',
+      format: function (value) {
+        return 'text='
+      }
     }, {
+      placeHolder: 'Text Color (#RRGGBB)?',
       action: 'input',
-      placeHolder: 'Text Color (#RRGGBB)'
     }, {
+      placeHolder: 'Text Alpha (0-255)?',
       action: 'input',
-      placeHolder: 'Text Alpha (0-255)'
     }, {
+      placeHolder: 'Background Color (#RRGGBB)?',
       action: 'input',
-      placeHolder: 'Background Color (#RRGGBB)'
     }, {
+      placeHolder: 'Background Alpha (0-255)?',
       action: 'input',
-      placeHolder: 'Background Alpha (0-255)'
     }, {
+      placeHolder: 'Choose a font?',
       action: 'select',
-      placeHolder: 'Choose a font',
       items: [{
         label: 'Lobster',
         description: '(default)'
@@ -321,12 +332,22 @@ const services = {
   'placeskull': {
     label: 'placeskull',
     description: 'http://placeskull.com',
+    url: 'http://placeskull.com$0$1',
     attributes: [{
+      placeHolder: 'Width?',
       action: 'input',
-      placeHolder: 'Width'
+      regex: '^\\d+$',
+      format: function (value) {
+        return '/' + value;
+      }
     }, {
+      placeHolder: 'Height?',
       action: 'input',
-      placeHolder: 'Height'
+      optional: true,
+      regex: '^\\d+$',
+      format: function (value) {
+        return '/' + value;
+      }
     }, {
       action: 'input',
       placeHolder: 'Skull id (0-25?)'
