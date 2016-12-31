@@ -122,7 +122,9 @@ const inputAttributeAction = (attribute, resolve, reject) => {
 const selectAttributeAction = (attribute, resolve, reject) => {
   // Add 'None' item if attribute is not required
   if (!attribute.required) {
-    attribute.items.push('None')
+    attribute.items.push({
+      label: 'None'
+    })
   }
 
   // Pick attribute value
@@ -137,7 +139,7 @@ const selectAttributeAction = (attribute, resolve, reject) => {
     let value = item.value ? item.value : item.label.trim().toLowerCase()
 
     // Ignore value
-    if (value !== 'None') {
+    if (value !== 'none') {
       attribute.value = value
     }
 
