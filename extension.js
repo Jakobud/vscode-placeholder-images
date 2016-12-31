@@ -94,7 +94,6 @@ const inputAttributeAction = (attribute, resolve, reject) => {
           return reject('No input value specified')
         }
 
-        // Trim the specified value
         value = value.trim()
 
         // Validation via regex
@@ -129,12 +128,13 @@ const selectAttributeAction = (attribute, resolve, reject) => {
   // Pick attribute value
   window.showQuickPick(attribute.items, {
     placeHolder: attribute.placeHolder
-  }).then((value) => {
-    if (typeof (value) === 'undefined') {
+  }).then((item) => {
+    if (typeof (item) === 'undefined') {
       return reject('No value was selected')
     }
 
-    value = value.value
+    // If value is not specified, use the trimed, lowercase label
+    let value = item.value ? item.value : item.label.trim().toLowerCase()
 
     // Ignore value
     if (value !== 'None') {
@@ -156,6 +156,7 @@ const booleanAttributeAction = (attribute, resolve, reject) => {
       return reject('No value was selected')
     }
 
+    attribute.value = value === 'Yes'
 
     return resolve()
   }, (err) => {
