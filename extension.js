@@ -77,11 +77,13 @@ exports.activate = activate
 
 const inputAttributeAction = (attribute, resolve, reject) => {
   // Add optional to placeHolder
-  const placeHolder = attribute.optional ? attribute.placeHolder + ' (optional)' : attribute.placeHolder
+  const placeHolder = !attribute.required ? attribute.placeHolder + ' (optional)' : attribute.placeHolder
 
-  let next = false
+  // Accept Promise or not
+  let accept = false
+
   promiseWhile(() => {
-    return !next
+    return !accept
   }, () => {
     return new Promise((resolve, reject) => {
       window.showInputBox({
@@ -100,27 +102,10 @@ const inputAttributeAction = (attribute, resolve, reject) => {
 
         // Regex test or is the value optional
         if (regexType.test(value)) {
-          // Optional value formatting
-          // if (attribute.format) {
-          //   value = attribute.format(value);
-          // }
-
-          // Replace url placeholder
           attribute.value = value
-
-          // service.url = service.url.replace('$' + index, value);
-
-          // Move to the next attribute
-          next = true
-
-          // Accept if value is optional
-        } else if (attribute.optional === true && value.length === 0) {
-          // Replace url placeholder
-          // service.url = service.url.replace('$' + index, '');
-          attribute.value = value
-
-          // Move to the next attribute
-          next = true
+          accept = true
+        } else if (!attribute.required && value.length === 0) {
+          accept = true
         }
 
         return resolve()
@@ -136,8 +121,8 @@ const inputAttributeAction = (attribute, resolve, reject) => {
 }
 
 const selectAttributeAction = (attribute, resolve, reject) => {
-  // Add 'None' item if attribute is optional
-  if (attribute.optional) {
+  // Add 'None' item if attribute is not required
+  if (!attribute.required) {
     attribute.items.push('None')
   }
 
@@ -152,17 +137,8 @@ const selectAttributeAction = (attribute, resolve, reject) => {
     value = value.value
 
     // Ignore value
-    if (value === 'None') {
-      // Remove url placeholder
-      service.url = service.url.replace('$' + index, '')
-    } else {
-      // Optional value formatting
-      if (attribute.format) {
-        value = attribute.format(value)
-      }
-
-      // Replace url placeholder
-      service.url = service.url.replace('$' + index, value)
+    if (value !== 'None') {
+      attribute.value = value
     }
 
     return resolve()
@@ -180,18 +156,6 @@ const booleanAttributeAction = (attribute, resolve, reject) => {
       return reject('No value was selected')
     }
 
-    if (value === 'Yes') {
-      // Optional value formatting
-      if (attribute.format) {
-        value = attribute.format(value)
-      }
-
-      // Replace url placeholder with value
-      service.url = service.url.replace('$' + index, value)
-    } else {
-      // Remove url placeholder
-      service.url = service.url.replace('$' + index, '')
-    }
 
     return resolve()
   }, (err) => {
