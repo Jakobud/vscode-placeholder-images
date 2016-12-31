@@ -3,12 +3,19 @@ const window = vscode.window
 
 const Promise = require('bluebird')
 const _ = require('lodash')
+const fs = require('fs')
+const path = require('path')
 
 // Import services
-const servicesData = require('./services')
 let services = []
-for (let key of Object.keys(servicesData)) {
-  services.push(servicesData[key])
+let servicesDir = path.join(__dirname, 'services')
+try {
+  let files = fs.readdirSync(servicesDir)
+  for (let file of files) {
+    services.push(require(path.join(servicesDir, file)))
+  }
+} catch (error) {
+  console.log(error)
 }
 
 let activate = (context) => {
@@ -27,7 +34,8 @@ let activate = (context) => {
       service = _.cloneDeep(service)
 
       // Loop through service attributes
-      let chain = service.attributes.reduce((previous, attribute, index) => {
+      let chain = Object.keys(service.attributes).reduce((previous, key) => {
+        let attribute = service.attributes[key]
         return previous.then((previousValue) => {
           return new Promise((resolve, reject) => {
             // Take appropriate action for attribute type
@@ -35,15 +43,15 @@ let activate = (context) => {
 
               // Input attribute
               case 'input':
-                return inputAttributeAction(service, index, resolve, reject)
+                return inputAttributeAction(attribute, resolve, reject)
 
               // Select attribute
               case 'select':
-                return selectAttributeAction(service, index, resolve, reject)
+                return selectAttributeAction(attribute, resolve, reject)
 
               // Select Yes/No attribute
               case 'boolean':
-                return booleanAttributeAction(service, index, resolve, reject)
+                return booleanAttributeAction(attribute, resolve, reject)
 
               default:
                 break
@@ -67,9 +75,7 @@ let activate = (context) => {
 }
 exports.activate = activate
 
-const inputAttributeAction = (service, index, resolve, reject) => {
-  const attribute = service.attributes[index]
-
+const inputAttributeAction = (attribute, resolve, reject) => {
   // Add optional to placeHolder
   const placeHolder = attribute.optional ? attribute.placeHolder + ' (optional)' : attribute.placeHolder
 
@@ -129,9 +135,7 @@ const inputAttributeAction = (service, index, resolve, reject) => {
   })
 }
 
-const selectAttributeAction = (service, index, resolve, reject) => {
-  const attribute = service.attributes[index]
-
+const selectAttributeAction = (attribute, resolve, reject) => {
   // Add 'None' item if attribute is optional
   if (attribute.optional) {
     attribute.items.push('None')
@@ -167,9 +171,7 @@ const selectAttributeAction = (service, index, resolve, reject) => {
   })
 }
 
-const booleanAttributeAction = (service, index, resolve, reject) => {
-  const attribute = service.attributes[index]
-
+const booleanAttributeAction = (attribute, resolve, reject) => {
   // Pick attribute value
   window.showQuickPick(['Yes', 'No'], {
     placeHolder: attribute.placeHolder
