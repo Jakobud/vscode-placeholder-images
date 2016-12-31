@@ -1,71 +1,64 @@
 module.exports = {
   label: 'placehold.it',
   description: 'https://placehold.it',
-  url: 'https://placehold.it/',
-  format: function () {
-    var attr = this.attributes
-    this.url += attr.width.value
-
-    if (attr.height.value !== '') {
-      this.url += 'x' + attr.height.value
-    }
-
-    if (attr.backgroundColor.value !== '') {
-      this.url += '/' + attr.backgroundColor.value.replace('#', '')
-    }
-
-    if (attr.textColor.value !== '') {
-      if (attr.backgroundColor.value === '') {
-        this.url += '/'
-      }
-      this.url += '/' + attr.textColor.value.replace('#', '')
-    }
-
-    if (attr.text.value !== '') {
-      this.url += '?text=' + encodeURIComponent(attr.text.value)
-    }
-  },
   attributes: {
     width: {
       placeHolder: 'Width?',
       action: 'input',
-      regex: '^\\d+$'
+      regex: '^\\d+$',
+      required: true
     },
     height: {
       placeHolder: 'Height?',
       action: 'input',
-      optional: true,
-      regex: '^\\d+$',
-      format: function (value) {
-        return 'x' + value
-      }
+      regex: '^\\d+$'
     },
     text: {
       placeHolder: 'Text?',
       action: 'input',
-      optional: true,
-      regex: '^.+$',
-      format: function (value) {
-        return '?text=' + encodeURIComponent(value)
-      }
+      regex: '^.+$'
     },
     textColor: {
       placeHolder: 'Text Color (#RRGGBB)?',
       action: 'input',
-      optional: true,
-      regex: '^#([A-Fa-f0-9]{6})$',
-      format: function (value) {
-        return '/' + value.replace('#', '')
-      }
+      regex: '^#([A-Fa-f0-9]{6})$'
     },
     backgroundColor: {
       placeHolder: 'Background Color (#RRGGBB)?',
       action: 'input',
-      optional: true,
-      regex: '^#([A-Fa-f0-9]{6})$',
-      format: function (value) {
-        return '/' + value.replace('#', '')
-      }
+      regex: '^#([A-Fa-f0-9]{6})$'
     }
+  },
+  format: function () {
+    const attr = this.attributes
+    let url = 'https://placehold.it/'
+
+    // Width
+    url += attr.width.value
+
+    // Height
+    if (attr.height.value) {
+      url += 'x' + attr.height.value
+    }
+
+    // Background Color
+    if (attr.backgroundColor.value) {
+      url += '/' + attr.backgroundColor.value.replace('#', '')
+    }
+
+    // Text Color
+    if (attr.textColor.value) {
+      if (!attr.backgroundColor.value) {
+        url += '/'
+      }
+      url += '/' + attr.textColor.value.replace('#', '')
+    }
+
+    // Text
+    if (attr.text.value) {
+      url += '?text=' + encodeURIComponent(attr.text.value)
+    }
+
+    return url
   }
 }
