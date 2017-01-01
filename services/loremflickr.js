@@ -1,51 +1,66 @@
 module.exports = {
   label: 'LoremFlickr',
   description: 'http://loremflickr.com',
-  url: 'http://loremflickr.com$3$0$1$2',
-  attributes: [{
-    placeHolder: 'Width?',
-    action: 'input',
-    regex: '^\\d+$',
-    format: function (value) {
-      return '/' + value
+  attributes: {
+    width: {
+      placeHolder: 'Width?',
+      action: 'input',
+      regex: '^\\d+$',
+      required: true
+    },
+    height: {
+      placeHolder: 'Height?',
+      action: 'input',
+      regex: '^\\d+$'
+    },
+    keyword: {
+      placeHolder: 'Search for Flickr keyword',
+      action: 'input',
+      regex: '^.+$'
+    },
+    modifier: {
+      action: 'select',
+      placeHolder: 'Select a modifer',
+      items: [{
+        label: 'Grayscale image',
+        value: 'g'
+      }, {
+        label: 'Pixelated image',
+        value: 'p'
+      }, {
+        label: 'Red overlay',
+        value: 'red'
+      }, {
+        label: 'Green overlay',
+        value: 'green'
+      }, {
+        label: 'Blue overlay',
+        value: 'blue'
+      }]
     }
-  }, {
-    placeHolder: 'Height?',
-    action: 'input',
-    regex: '^\\d+$',
-    format: function (value) {
-      return '/' + value
+  },
+  format: function () {
+    const attr = this.attributes
+    let url = 'http://loremflickr.com'
+
+    // Modifier
+    if (attr.modifier.value) {
+      url += '/' + attr.modifier.value
     }
-  }, {
-    placeHolder: 'Search for Flickr keyword',
-    action: 'input',
-    optional: true,
-    regex: '^.+$',
-    format: function (value) {
-      return '/' + value
+
+    // Width
+    url += '/' + attr.width.value
+
+    // Height
+    if (attr.height.value) {
+      url += '/' + attr.height.value
     }
-  }, {
-    action: 'select',
-    placeHolder: 'Select a modifer',
-    optional: true,
-    items: [{
-      label: 'Grayscale',
-      value: 'g'
-    }, {
-      label: 'Pixelated',
-      value: 'p'
-    }, {
-      label: 'Red overlay',
-      value: 'red'
-    }, {
-      label: 'Green overlay',
-      value: 'green'
-    }, {
-      label: 'Blue overlay',
-      value: 'blue'
-    }],
-    format: function (value) {
-      return '/' + value
+
+    // Keyword
+    if (attr.keyword.value) {
+      url += '/' + attr.keyword.value
     }
-  }]
+
+    return url
+  }
 }
