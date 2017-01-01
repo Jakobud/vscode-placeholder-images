@@ -125,6 +125,8 @@ const selectAttributeAction = (attribute, resolve, reject) => {
     attribute.items.push({
       label: 'None'
     })
+
+    attribute.placeHolder += ' (optional)'
   }
 
   // Pick attribute value
