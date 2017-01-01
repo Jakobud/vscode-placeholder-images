@@ -1,76 +1,83 @@
 module.exports = {
   label: 'LoremPixel',
   description: 'http://lorempixel.com',
-  url: 'http://lorempixel.com/$4$0$1$2$3',
-  attributes: [{
-    placeHolder: 'Width?',
-    action: 'input',
-    regex: '^\\d+$'
-  }, {
-    placeHolder: 'Height?',
-    action: 'input',
-    regex: '^\\d+$',
-    optional: true,
-    format: function (value) {
-      return '/' + value
+  attributes: {
+    width: {
+      placeHolder: 'Width?',
+      action: 'input',
+      regex: '^\\d+$',
+      required: true
+    },
+    height: {
+      placeHolder: 'Height?',
+      action: 'input',
+      regex: '^\\d+$',
+      required: true
+    },
+    category: {
+      action: 'select',
+      placeHolder: 'Category?',
+      items: [{
+        label: 'Abstract'
+      }, {
+        label: 'Animals'
+      }, {
+        label: 'Business'
+      }, {
+        label: 'Cats'
+      }, {
+        label: 'City'
+      }, {
+        label: 'Food'
+      }, {
+        label: 'Nightlife'
+      }, {
+        label: 'Fashion'
+      }, {
+        label: 'People'
+      }, {
+        label: 'Nature'
+      }, {
+        label: 'Sports'
+      }, {
+        label: 'Technics'
+      }]
+    },
+    text: {
+      placeHolder: 'Text?',
+      action: 'input',
+      regex: '^.+$'
+    },
+    grayscale: {
+      placeHolder: 'Greyscale?',
+      action: 'boolean'
     }
-  }, {
-    action: 'select',
-    placeHolder: 'Category?',
-    optional: true,
-    items: [{
-      label: 'Abstract',
-      value: 'abstract'
-    }, {
-      label: 'Animals',
-      value: 'animals'
-    }, {
-      label: 'Business',
-      value: 'business'
-    }, {
-      label: 'Cats',
-      value: 'cats'
-    }, {
-      label: 'City',
-      value: 'city'
-    }, {
-      label: 'Food',
-      value: 'food'
-    }, {
-      label: 'Nightlife',
-      value: 'nightlife'
-    }, {
-      label: 'Fashion',
-      value: 'fashion'
-    }, {
-      label: 'People',
-      value: 'people'
-    }, {
-      label: 'Nature',
-      value: 'nature'
-    }, {
-      label: 'Sports',
-      value: 'sports'
-    }, {
-      label: 'Technics',
-      value: 'technics'
-    }],
-    format: function (value) {
-      return '/' + value
+  },
+  format: function () {
+    const attr = this.attributes
+    let url = 'http://lorempixel.com'
+
+    // Grayscale
+    if (attr.grayscale.value === true) {
+      url += '/g'
     }
-  }, {
-    placeHolder: 'Text?',
-    action: 'input',
-    regex: '^.+$',
-    optional: true,
-    format: function (value) {
-      return '/' + encodeURIComponent(value)
+
+    // Width
+    url += '/' + attr.width.value
+
+    // Height
+    url += '/' + attr.height.value
+
+    // Category
+    if (attr.category.value) {
+      url += '/' + attr.category.value
     }
-  }, {
-    placeHolder: 'Greyscale?',
-    action: 'boolean',
-    format: function (value) {
-      return 'g/'
+
+    // Text
+    if (attr.text.value) {
+      url += '/' + encodeURIComponent(attr.text.value)
     }
-  }]
+
+    return url
+  }
 }
