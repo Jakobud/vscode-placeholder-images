@@ -83,7 +83,7 @@ module.exports = {
 
     // Text
     if (attr.text.value) {
-      params.push('text=' + attr.text.value)
+      params.push('text=' + encodeURIComponent(attr.text.value))
     }
 
     // Font
