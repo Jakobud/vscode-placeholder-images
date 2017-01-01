@@ -11,7 +11,8 @@ module.exports = {
     height: {
       placeHolder: 'Height?',
       action: 'input',
-      regex: '^\\d+$'
+      regex: '^\\d+$',
+      required: true
     },
     keyword: {
       placeHolder: 'Search for Flickr keyword',
@@ -52,13 +53,11 @@ module.exports = {
     url += '/' + attr.width.value
 
     // Height
-    if (attr.height.value) {
-      url += '/' + attr.height.value
-    }
+    url += '/' + attr.height.value
 
     // Keyword
     if (attr.keyword.value) {
-      url += '/' + attr.keyword.value
+      url += '/' + encodeURIComponent(attr.keyword.value)
     }
 
     return url
