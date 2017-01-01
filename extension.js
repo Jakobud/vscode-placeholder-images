@@ -137,7 +137,7 @@ const selectAttributeAction = (attribute, resolve, reject) => {
       return reject('No value was selected')
     }
 
-    // If value is not specified, use the trimed, lowercase label
+    // If value is not specified, use the trimmed, lowercase label
     let value = item.value ? item.value : item.label.trim().toLowerCase()
 
     // Ignore value
