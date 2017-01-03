@@ -5,6 +5,10 @@ const Promise = require('bluebird')
 const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
+const copyPaste = require('copy-paste')
+const open = require('open')
+
+const statusBarMessageTimeout = 5000 // 5 seconds
 
 // Import services
 let services = []
@@ -62,7 +66,8 @@ let activate = (context) => {
 
       // End of the reducer chain
       chain.then(() => {
-        console.log(service)
+        // Show the action quick pick using the generated url
+        showActionPicker(service.format())
       }).catch((err) => {
         console.error(err)
       })
@@ -174,6 +179,132 @@ const promiseWhile = (predicate, action) => {
     return Promise.resolve(action()).then(loop)
   }
   return Promise.resolve().then(loop)
+}
+
+const showActionPicker = (url) => {
+  return new Promise((resolve, reject) => {
+    // Reject if any chosen file properties are missing
+    if (typeof (url) === 'undefined') {
+      reject('No url specified')
+    }
+
+    // Arrays of actions
+    let actions = []
+
+    // Insert <img> tag into document action
+    if (window.activeTextEditor) {
+      actions.push({
+        label: '<img>: Insert into document',
+        callback: () => {
+          insertText(tag)
+        }
+      })
+    }
+
+    // Copy <img> tag to clipboard action
+    actions.push({
+      label: '<img>: Copy to clipboard',
+      callback: () => {
+        copy(tag, '<img> tag copied to the clipboard')
+      }
+    })
+
+    // Insert URL into document action
+    if (window.activeTextEditor) {
+      actions.push({
+        label: 'URL: Insert into document',
+        callback: () => {
+          insertText(url)
+        }
+      })
+    }
+
+    // Copy URL to clipboard action
+    actions.push({
+      label: 'URL: Copy to clipboard',
+      callback: () => {
+        copy(url, 'URL copied to the clipboard')
+      }
+    })
+
+    // Open URL in browser action
+    actions.push({
+      label: 'URL: Open in browser',
+      callback: () => {
+        open(url)
+      }
+    })
+
+    return new Promise((resolve, reject) => {
+      window.showQuickPick(actions, {
+        placeHolder: url
+      }).then((action) => {
+          // No action was chosen
+        if (typeof (action) === 'undefined') {
+          return reject('No action was chosen')
+        }
+
+        // Execute action callback
+        action.callback()
+
+        resolve()
+      }, (err) => {
+        reject(err)
+      })
+    })
+  })
+}
+
+  // Insert text into active document at cursor positions
+let insertText = (text) => {
+  let textEditor = window.activeTextEditor
+
+  // Ignore if no active TextEditor
+  if (typeof (textEditor) === 'undefined') {
+    return false
+  }
+
+  // Get the active text document's uri
+  let uri = textEditor.document.uri
+
+  // Create a new TextEdit for each selection
+  let edits = []
+  for (let selection of textEditor.selections) {
+    edits.push(vscode.TextEdit.insert(selection.active, text))
+  }
+
+  // New WorkspaceEdit
+  let edit = new vscode.WorkspaceEdit()
+  edit.set(uri, edits)
+
+  // Applying the WorkspaceEdit
+  workspace.applyEdit(edit)
+    .then(() => {
+      // Clear the selection
+      textEditor.selection = new vscode.Selection(textEditor.selection.end, textEditor.selection.end)
+    }, (err) => {
+      console.error(err)
+    })
+
+  return true
+}
+
+// Copy text to clipboard and set statusBarMessage
+let copy = (text, message) => {
+  copyPaste.copy(text, () => {
+    if (message) {
+      statusMessage(message)
+    }
+  })
+}
+
+// Set consistent status bar message using timeout with either promise or time in milliseconds
+let statusMessage = (text, promise) => {
+  if (promise) {
+    window.setStatusBarMessage('cdnjs: ' + text, promise)
+  } else {
+    window.setStatusBarMessage('cdnjs: ' + text, statusBarMessageTimeout)
+  }
 }
 
 // this method is called when your extension is deactivated
