@@ -21,7 +21,22 @@
         "title": "Placeholder Image",
         "description": "Insert a placeholder image"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Placeholder Images",
+      "properties": {
+        "placeholderImages.quoteStyle": {
+          "type": "string",
+          "default": "single",
+          "enum": [
+            "single",
+            "double"
+          ],
+          "description": "Quote style for HTML tags. Possible values are 'single' or 'double'"
+        }
+      }
+    }
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install"

@@ -1,5 +1,6 @@
 const vscode = require('vscode')
 const window = vscode.window
+const workspace = vscode.workspace
 
 const Promise = require('bluebird')
 const _ = require('lodash')
@@ -9,6 +10,12 @@ const copyPaste = require('copy-paste')
 const open = require('open')
 
 const statusBarMessageTimeout = 5000 // 5 seconds
+// Quote configuration values
+const quotes = {
+  'single': "'",
+  'double': '"'
+}
+const quoteDefault = "'"
 
 // Import services
 let services = []
@@ -80,6 +87,7 @@ let activate = (context) => {
 }
 exports.activate = activate
 
+// Input value using input box
 const inputAttributeAction = (attribute, resolve, reject) => {
   // Add optional to placeHolder
   const placeHolder = !attribute.required ? attribute.placeHolder + ' (optional)' : attribute.placeHolder
@@ -108,6 +116,8 @@ const inputAttributeAction = (attribute, resolve, reject) => {
         if (regexType.test(value)) {
           attribute.value = value
           accept = true
+
+          // If attribute is not required, accept undefined value
         } else if (!attribute.required && value.length === 0) {
           accept = true
         }
@@ -124,6 +134,7 @@ const inputAttributeAction = (attribute, resolve, reject) => {
   })
 }
 
+// Select value from QuickPick
 const selectAttributeAction = (attribute, resolve, reject) => {
   // Add 'None' item if attribute is not required
   if (!attribute.required) {
@@ -156,6 +167,7 @@ const selectAttributeAction = (attribute, resolve, reject) => {
   })
 }
 
+// Select from a Yes/No QuickPick
 const booleanAttributeAction = (attribute, resolve, reject) => {
   // Pick attribute value
   window.showQuickPick(['Yes', 'No'], {
@@ -187,6 +199,16 @@ const showActionPicker = (url) => {
     if (typeof (url) === 'undefined') {
       reject('No url specified')
     }
+
+    // Configuration
+    const config = vscode.workspace.getConfiguration('placeholderImages')
+
+    // Determine the quote style from configuration
+    const quote = quotes[config.get('quoteStyle')] || quoteDefault
+    console.log(quote)
+
+    // Image tag
+    const tag = '<img src=' + quote + url + quote + ' alt=' + quote + quote + '/>'
 
     // Arrays of actions
     let actions = []
