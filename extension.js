@@ -8,6 +8,7 @@ const fs = require('fs')
 const path = require('path')
 const copyPaste = require('copy-paste')
 const open = require('open')
+const Cache = require('vscode-cache')
 
 const statusBarMessageTimeout = 5000 // 5 seconds
 // Quote configuration values
@@ -16,6 +17,13 @@ const quotes = {
   'double': '"'
 }
 const quoteDefault = "'"
+
+// Cache
+let cache
+const recentImagesKey = 'recentImages'
+
+// Recent images
+const maxRecentImagesDefault = 10
 
 // Import services
 let services = []
@@ -30,6 +38,11 @@ try {
 }
 
 let activate = (context) => {
+  // Initialize cache
+  if (typeof (cache) === 'undefined') {
+    cache = new Cache(context)
+  }
+
   let disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', () => {
     // Choose from available services
     window.showQuickPick(services, {
@@ -205,7 +218,6 @@ const showActionPicker = (url) => {
 
     // Determine the quote style from configuration
     const quote = quotes[config.get('quoteStyle')] || quoteDefault
-    console.log(quote)
 
     // Image tag
     const tag = '<img src=' + quote + url + quote + ' alt=' + quote + quote + '/>'
@@ -268,6 +280,20 @@ const showActionPicker = (url) => {
 
         // Execute action callback
         action.callback()
+
+        // Fetch cached recent images
+        let recent = cache.get(recentImagesKey, [])
+
+        // Push to front of recent images array
+        recent.unshift(url)
+
+        // Limit to maxium number of recent image urls according to configuration
+        let max = this.workspace.getConfiguration('placeholderImages').get('maxRecentImages')
+        max = (Number.isInteger(max) === true && max >= 1) ? max : maxRecentImagesDefault
+        recent = recent.slice(0, max)
+
+        // Save to cache
+        cache.put(recentImagesKey, recent)
 
         resolve()
       }, (err) => {
