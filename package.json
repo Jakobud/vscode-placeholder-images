@@ -14,6 +14,7 @@
     "onCommand:placeholderImages.insert",
     "onCommand:placeholderImages.recent"
   ],
+  "icon": "images/icon.svg",
   "main": "./extension",
   "contributes": {
     "commands": [
@@ -44,7 +45,7 @@
         "placeholderImages.maxRecentImages": {
           "type": "integer",
           "default": 10,
-          "description": "The maxmium number of Recent Placeholder Image URLs to save"
+          "description": "The maximum number of image urls to save for the Recent images list"
         }
       }
     }

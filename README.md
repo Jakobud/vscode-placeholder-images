@@ -1,65 +1,54 @@
-# placeholder-images README
+# Placeholder Images for Visual Studio Code
 
-This is the README for your extension "placeholder-images". After writing up a brief description, we recommend including the following sections.
+Generate and insert placeholder images into your HTML in Visual Studio Code using various 3rd party services like Unsplash, placehold.it, LoremFlickr and more.
 
+---
+## Placeholder services supported
+- [DummyImage.com](https://dummyimage.com/)
+- [Fake Images Please](https://fakeimg.pl)
+- [LoremFlickr](http://loremflickr.com)
+- [LoremPixel](http://lorempixel.com)
+- [Pipsum](http://pipsum.com)
+- [Placehold.it](http://placehold.it)
+- [Placekitten](http://placekitten.com)
+- [Placeskull](http://placeskull.com)
+- [Unsplash](https://unsplash.it/)
+
+---
 ## Features
+- Choose your image width, height, text, colors, etc. Each placeholder image service supports various types of image attributes
+- Insert generated `<img>` tag into your HTML
+- Insert only the image url into your HTML
+- Copy the `<img>` tag to the clipboard
+- Copy the image url to the clipboard
+- Open the image url in your default browser
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+---
+## Recent Images
+- Keeps track of your most recently used placeholder images
 
-For example if there is an image subfolder under your extension project workspace:
+---
+## Visual Studio Code Commands
 
-\!\[feature X\]\(images/feature-x.png\)
+### `Placeholder Images: Insert new image`
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- Choose a placeholder image service and specify image width, height, etc to generate a url to a new placeholder image.
 
-## Requirements
+### `Placeholder Images: Recent images`
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- Choose from a list of your most recently used placeholder images.
 
-## Extension Settings
+---
+## Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### `placeholderImages.quoteStyle`
 
-For example:
+- Quote style for HTML tags. Possible values are `single` or `double`
+- Default: `single`
 
-This extension contributes the following settings:
+### `placeholderImages.maxRecentImages`
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+- The maximum number of image urls to save for the Recent images list
+- Default: `10`
 
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+> Disclaimer: This extension is not affiliated with any of the used placeholder image services in any way. This extension simply generates image urls for the placeholder image services.
