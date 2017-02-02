@@ -43,7 +43,7 @@ let activate = (context) => {
     cache = new Cache(context)
   }
 
-  let disposable = vscode.commands.registerCommand('placeholderImages.placeholderImage', () => {
+  let placeholderImagesDisposable = vscode.commands.registerCommand('placeholderImages.insert', () => {
     // Choose from available services
     window.showQuickPick(services, {
       'placeHolder': 'Choose a Placeholder Image service'
@@ -95,8 +95,58 @@ let activate = (context) => {
       console.error(err)
     })
   })
+  context.subscriptions.push(placeholderImagesDisposable)
 
-  context.subscriptions.push(disposable)
+  let recentImagesDisposable = vscode.commands.registerCommand('placeholderImages.recent', () => {
+    // Get the recent images from the cache
+    let recent = cache.get(recentImagesKey, [])
+
+    // No Recent images found
+    if (recent.length < 1) {
+      // Offer insert command instead
+      return vscode.window.showInformationMessage('No Recent Images. Do you want choose a new image instead?', 'Yes')
+        .then((value) => {
+          if (value === 'Yes') {
+            vscode.commands.executeCommand('placeholderImages.insert')
+          }
+        }, (err) => {
+          console.error(err)
+        })
+    }
+
+    // Build list of quick pick items
+    let items = []
+    for (let url of recent) {
+      items.push(url)
+    }
+
+    // Clear recent images command
+    items.push('Clear recent images list')
+
+    // Show quick pick menu of recent images
+    window.showQuickPick(items, {
+      placeHolder: 'Choose a recent placeholder image'
+    })
+      .then((value) => {
+        // No url was chosen
+        if (typeof (value) === 'undefined') {
+          console.error('No placeholder image was chosen')
+          return false
+        }
+
+        // Clear recent images
+        if (value === _.last(items)) {
+          cache.forget(recentImagesKey)
+          return true
+        }
+
+        // Show quick picker menu of actions for the chosen url
+        showActionPicker(value)
+      }, (err) => {
+        console.error(err)
+      })
+  })
+  context.subscriptions.push(recentImagesDisposable)
 }
 exports.activate = activate
 
@@ -284,11 +334,20 @@ const showActionPicker = (url) => {
         // Fetch cached recent images
         let recent = cache.get(recentImagesKey, [])
 
+        // Remove library if it already exists in array
+        for (let index in recent) {
+          // Match found, remove it from the array
+          if (url === recent[index]) {
+            recent.splice(index, 1)
+            break
+          }
+        }
+
         // Push to front of recent images array
         recent.unshift(url)
 
         // Limit to maxium number of recent image urls according to configuration
-        let max = this.workspace.getConfiguration('placeholderImages').get('maxRecentImages')
+        let max = workspace.getConfiguration('placeholderImages').get('maxRecentImages')
         max = (Number.isInteger(max) === true && max >= 1) ? max : maxRecentImagesDefault
         recent = recent.slice(0, max)
 

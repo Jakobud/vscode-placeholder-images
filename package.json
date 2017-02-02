@@ -11,15 +11,21 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:placeholderImages.placeholderImage"
+    "onCommand:placeholderImages.insert",
+    "onCommand:placeholderImages.recent"
   ],
   "main": "./extension",
   "contributes": {
     "commands": [
       {
-        "command": "placeholderImages.placeholderImage",
-        "title": "Placeholder Image",
-        "description": "Insert a placeholder image"
+        "command": "placeholderImages.insert",
+        "title": "Insert new image",
+        "category": "Placeholder Images"
+      },
+      {
+        "command": "placeholderImages.recent",
+        "title": "Recent images",
+        "category": "Placeholder Images"
       }
     ],
     "configuration": {
