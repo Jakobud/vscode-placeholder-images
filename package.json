@@ -1,7 +1,7 @@
 {
-  "name": "placeholder-images",
+  "name": "vscode-placeholder-images",
   "displayName": "Placeholder Images",
-  "description": "",
+  "description": "Generate and insert placeholder images into your HTML",
   "version": "0.1.0",
   "publisher": "JakeWilson",
   "engines": {
@@ -10,12 +10,27 @@
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "placeholder",
+    "images",
+    "lorem",
+    "placehold.it",
+    "unsplash"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jakobud/vscode-placeholder-images.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jakobud/vscode-placeholder-images/issues"
+  },
+  "homepage": "https://github.com/Jakobud/vscode-placeholder-images",
   "activationEvents": [
     "onCommand:placeholderImages.insert",
     "onCommand:placeholderImages.recent"
   ],
   "icon": "images/icon.svg",
-  "main": "./extension",
+  "main": "./extension.js",
   "contributes": {
     "commands": [
       {
