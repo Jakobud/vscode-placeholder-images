@@ -70,7 +70,7 @@ module.exports = {
 
     // Category
     if (attr.category.value) {
-      url += '/' + attr.category.value
+      url += '/' + attr.category.value.toLowerCase()
     }
 
     // Text
