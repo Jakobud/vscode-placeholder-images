@@ -2,7 +2,7 @@
 
 Generate and insert placeholder images into your HTML in Visual Studio Code using various 3rd party services like Unsplash, placehold.it, LoremFlickr and more.
 
-![Generating a placeholder image using https://placehold.it](images/example.gif)
+![Generating a placeholder image using placehold.it](images/example.gif)
 
 ## Placeholder services supported
 - [DummyImage.com](https://dummyimage.com/)
