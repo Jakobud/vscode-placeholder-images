@@ -50,7 +50,7 @@
       "properties": {
         "placeholderImages.quoteStyle": {
           "type": "string",
-          "default": "single",
+          "default": "double",
           "enum": [
             "single",
             "double"
