@@ -1,6 +1,6 @@
 module.exports = {
-  label: 'placehold.it',
-  description: 'https://placehold.it',
+  label: 'placeholder.com',
+  description: 'https://placeholder.com',
   attributes: {
     width: {
       placeHolder: 'Width?',
@@ -31,7 +31,7 @@ module.exports = {
   },
   format: function () {
     const attr = this.attributes
-    let url = 'https://placehold.it/'
+    let url = 'https://via.placeholder.com/'
 
     // Width
     url += attr.width.value
