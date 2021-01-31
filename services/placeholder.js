@@ -1,5 +1,4 @@
 const inputAction = require('../actions/input')
-const booleanAction = require('../actions/boolean')
 const selectAction = require('../actions/select')
 
 module.exports = {
