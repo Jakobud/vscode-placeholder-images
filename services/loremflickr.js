@@ -1,63 +1,87 @@
+const inputAction = require('../actions/input')
+const selectAction = require('../actions/select')
+
 module.exports = {
   label: 'LoremFlickr',
-  description: 'http://loremflickr.com',
-  attributes: {
-    width: {
-      placeHolder: 'Width?',
-      action: 'input',
+  description: 'https://loremflickr.com',
+  generateUrl: async function() {
+    // Image Width
+    let width = await inputAction({
+      required: true,
+      placeHolder: 'Width',
+      prompt: 'Width of the image',
       regex: '^\\d+$',
-      required: true
-    },
-    height: {
-      placeHolder: 'Height?',
-      action: 'input',
-      regex: '^\\d+$',
-      required: true
-    },
-    keyword: {
-      placeHolder: 'Search for Flickr keyword',
-      action: 'input',
-      regex: '^.+$'
-    },
-    modifier: {
-      action: 'select',
-      placeHolder: 'Select a modifer',
-      items: [{
-        label: 'Grayscale image',
-        value: 'g'
-      }, {
-        label: 'Pixelated image',
-        value: 'p'
-      }, {
-        label: 'Red overlay',
-        value: 'red'
-      }, {
-        label: 'Green overlay',
-        value: 'green'
-      }, {
-        label: 'Blue overlay',
-        value: 'blue'
-      }]
-    }
-  },
-  format: function () {
-    const attr = this.attributes
-    let url = 'http://loremflickr.com'
+      invalid: 'Image width must be a whole number (integer)'
+    })
 
-    // Modifier
-    if (attr.modifier.value) {
-      url += '/' + attr.modifier.value
+    if (typeof(width) === 'undefined') {
+      return undefined
     }
 
-    // Width
-    url += '/' + attr.width.value
+    // Image Height
+    let height = await inputAction({
+      placeHolder: 'Height (Optional)',
+      prompt: 'Height of the image (optional)',
+      regex: '^\\d+$',
+      invalid: 'Image height must be a whole number (integer)'
+    })
 
-    // Height
-    url += '/' + attr.height.value
+    if (typeof(height) === 'undefined') {
+      return undefined
+    }
 
     // Keyword
-    if (attr.keyword.value) {
-      url += '/' + encodeURIComponent(attr.keyword.value)
+    let keyword = await inputAction({
+      placeHolder: 'Flickr keyword search (Optional)',
+      prompt: 'Search for a Flickr keyword',
+      regex: '^.+$',
+      invalid: 'The keyword must be any word'
+    })
+
+    if (typeof(keyword) === 'undefined') {
+      return undefined
+    }
+
+    // Style
+    let stylized = await selectAction({
+      placeHolder: 'Stylize Image?',
+      items: ['None', 'Grayscale', 'Pixelated', 'Red Overlay', 'Green Overlay', 'Blue Overlay']
+    })
+
+    if (typeof(stylized) === 'undefined') {
+      return undefined
+    }
+
+    // Build the URL
+    let url = 'https://loremflickr.com'
+
+    switch (stylized) {
+      case 'Grayscale':
+        url += `/g`
+        break
+      case 'Pixelated':
+        url += `/p`
+        break
+      case 'Red Overlay':
+        url += `/red`
+        break
+      case 'Green Overlay':
+        url += `/green`
+        break
+      case 'Blue Overlay':
+        url += `/blue`
+        break
+      default:
+    }
+
+    url += `/${width}`
+
+    if (height !== '') {
+      url += `/${height}`
+    }
+
+    if (keyword !== '') {
+      url += `/${encodeURIComponent(keyword)}`
     }
 
     return url
