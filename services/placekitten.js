@@ -1,38 +1,55 @@
+const inputAction = require('../actions/input')
+const booleanAction = require('../actions/boolean')
+
 module.exports = {
   label: 'placekitten',
-  description: 'http://placekitten.com',
-  attributes: {
-    width: {
-      placeHolder: 'Width?',
-      action: 'input',
+  description: 'https://placekitten.com',
+  generateUrl: async function () {
+    // Image Width
+    let width = await inputAction({
+      required: true,
+      placeHolder: 'Width',
+      prompt: 'Width of the image',
       regex: '^\\d+$',
-      required: true
-    },
-    height: {
-      placeHolder: 'Height?',
-      action: 'input',
-      regex: '^\\d+$'
-    },
-    grayscale: {
-      placeHolder: 'Grayscale?',
-      action: 'boolean'
+      invalid: 'Image width must be a whole number (integer)'
+    })
+
+    if (typeof(width) === 'undefined') {
+      return undefined
     }
-  },
-  format: function () {
-    const attr = this.attributes
-    let url = 'http://placekitten.com'
+
+    // Image Height
+    let height = await inputAction({
+      placeHolder: 'Height (Optional)',
+      prompt: 'Height of the image (optional)',
+      regex: '^\\d+$',
+      invalid: 'Image height must be a whole number (integer)'
+    })
+
+    if (typeof(height) === 'undefined') {
+      return undefined
+    }
 
     // Grayscale
-    if (attr.grayscale.value === true) {
-      url += '/g'
+    let grayscale = await booleanAction({
+      placeHolder: 'Grayscale?',
+    })
+
+    if (typeof(grayscale) === 'undefined') {
+      return undefined
     }
 
-    // Width
-    url += '/' + attr.width.value
+    // Build the URL
+    let url = 'https://placekitten.com'
 
-    // Height
-    if (attr.height.value) {
-      url += '/' + attr.height.value
+    if (grayscale === true) {
+      url += `/g`
+    }
+
+    url += `/${width}`
+    
+    if (height !== '') {
+      url += `/${height}`
     }
 
     return url
