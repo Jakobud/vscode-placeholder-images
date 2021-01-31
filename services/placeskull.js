@@ -1,101 +1,73 @@
+const inputAction = require('../actions/input')
+
 module.exports = {
-  label: 'placeskull',
-  description: 'http://placeskull.com',
-  url: 'http://placeskull.com$0$1',
-  attributes: {
-    width: {
-      placeHolder: 'Width?',
-      action: 'input',
+  label: 'PlaceSkull',
+  description: 'https://placeskull.com',
+  generateUrl: async function () {
+    // Image Width
+    let width = await inputAction({
+      required: true,
+      placeHolder: 'Width',
+      prompt: 'Width of the image',
       regex: '^\\d+$',
-      required: true
-    },
-    height: {
-      placeHolder: 'Height?',
-      action: 'input',
-      regex: '^\\d+$'
-    },
-    backgroundColor: {
-      action: 'input',
-      placeHolder: 'Background Color (#RRGGBB)',
-      regex: '^#([A-Fa-f0-9]{6})$'
-    },
-    skullId: {
-      action: 'select',
-      placeHolder: 'Skull ID?',
-      items: [{
-        label: '1'
-      }, {
-        label: '2'
-      }, {
-        label: '3'
-      }, {
-        label: '4'
-      }, {
-        label: '5'
-      }, {
-        label: '6'
-      }, {
-        label: '7'
-      }, {
-        label: '8'
-      }, {
-        label: '9'
-      }, {
-        label: '10'
-      }, {
-        label: '11'
-      }, {
-        label: '12'
-      }, {
-        label: '13'
-      }, {
-        label: '14'
-      }, {
-        label: '15'
-      }, {
-        label: '16'
-      }, {
-        label: '17'
-      }, {
-        label: '18'
-      }, {
-        label: '19'
-      }, {
-        label: '20'
-      }, {
-        label: '21'
-      }, {
-        label: '22'
-      }, {
-        label: '23'
-      }, {
-        label: '24'
-      }]
+      invalid: 'Image width must be a whole number (integer)'
+    })
+
+    if (typeof(width) === 'undefined') {
+      return undefined
     }
-  },
-  format: function () {
-    const attr = this.attributes
-    let url = 'http://placeskull.com'
 
-    // Width
-    url += '/' + attr.width.value
+    // Image Height
+    let height = await inputAction({
+      placeHolder: 'Height (Optional)',
+      prompt: 'Height of the image (optional)',
+      regex: '^\\d+$',
+      invalid: 'Image height must be a whole number (integer)'
+    })
 
-    // Height
-    if (attr.height.value) {
-      url += '/' + attr.height.value
+    if (typeof(height) === 'undefined') {
+      return undefined
     }
 
     // Background Color
-    if (attr.backgroundColor.value) {
-      if (!attr.height.value) {
-        url += '/' + attr.width.value
-      }
-      url += '/' + attr.backgroundColor.value.replace('#', '')
+    let backgroundColor = await inputAction({
+      placeHolder: 'Background Color (Optional)',
+      prompt: 'The color of the background in hex format (RRGGBB)',
+      regex: '^([A-Fa-f0-9]{6})$',
+      invalid: 'The color must be 6-digit hex format'
+    })
+
+    if (typeof(backgroundColor) === 'undefined') {
+      return undefined
     }
 
-    // Skull image id
-    if (attr.skullId.value && attr.backgroundColor.value) {
-      url += '/' + attr.skullId.value
+    // Skull ID
+    let skull = await inputAction({
+      placeHolder: 'Skull ID (1-45) (Optional)',
+      prompt: 'Choose a specific skull ID (Optional)',
+      regex: '^([1-9]|[1-3][0-9]|4[0-5])$',
+      invalid: 'The skull ID is between 1-45'
+    })
+
+    if (typeof(skull) === 'undefined') {
+      return undefined
+    }
+
+    // Build the URL
+    let url = 'https://placeskull.com'
+
+    url += `/${width}`
+
+    if (height !== '') {
+      url += `/${height}`
+    }
+
+    if (backgroundColor !== '') {
+      url += `/${backgroundColor}`
+    }
+
+    if (skull !== '') {
+      url += `/${skull}`
     }
 
     return url
