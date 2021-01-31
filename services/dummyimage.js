@@ -1,75 +1,105 @@
+const inputAction = require('../actions/input')
+const selectAction = require('../actions/select')
+
 module.exports = {
   label: 'DummyImage',
-  description: 'http://dummyimage.com',
-  attributes: {
-    width: {
-      placeHolder: 'Width?',
-      action: 'input',
+  description: 'https://dummyimage.com',
+  generateUrl: async function () {
+    // Image Width
+    let width = await inputAction({
+      required: true,
+      placeHolder: 'Width',
+      prompt: 'Width of the image',
       regex: '^\\d+$',
-      required: true
-    },
-    height: {
-      placeHolder: 'Height?',
-      action: 'input',
-      regex: '^\\d+$'
-    },
-    text: {
-      placeHolder: 'Text?',
-      action: 'input',
-      regex: '^.+$'
-    },
-    textColor: {
-      placeHolder: 'Text Color (#RRGGBB or #RGB)?',
-      action: 'input',
-      regex: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
-    },
-    backgroundColor: {
-      placeHolder: 'Background Color (#RRGGBB or #RGB)?',
-      action: 'input',
-      regex: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
-    },
-    format: {
-      action: 'select',
-      placeHolder: 'Image format?',
-      items: [{
-        label: '.gif'
-      }, {
-        label: '.png'
-      }, {
-        label: '.jpg'
-      }]
-    }
-  },
-  format: function () {
-    const attr = this.attributes
-    let url = 'https://dummyimage.com/'
+      invalid: 'Image width must be a whole number (integer)'
+    })
 
-    // Width
-    url += attr.width.value
-
-    // Height
-    if (attr.height.value) {
-      url += 'x' + attr.height.value
+    if (typeof(width) === 'undefined') {
+      return undefined
     }
 
-    // Background Color
-    if (attr.backgroundColor.value) {
-      url += '/' + attr.backgroundColor.value.replace('#', '')
-    }
+    // Image Height
+    let height = await inputAction({
+      placeHolder: 'Height (Optional)',
+      prompt: 'Height of the image (optional)',
+      regex: '^\\d+$',
+      invalid: 'Image height must be a whole number (integer)'
+    })
 
-    // Text Color
-    if (attr.textColor.value) {
-      url += '/' + attr.textColor.value.replace('#', '')
-    }
-
-    // Image format
-    if (attr.format.value) {
-      url += attr.format.value
+    if (typeof(height) === 'undefined') {
+      return undefined
     }
 
     // Text
-    if (attr.text.value) {
-      url += '?text=' + encodeURIComponent(attr.text.value)
+    let text = await inputAction({
+      placeHolder: 'Text (Optional)',
+      prompt: 'Optional text on the image',
+      regex: '^.+$',
+      invalid: 'The text must be any alphanumeric characters'
+    })
+
+    if (typeof(text) === 'undefined') {
+      return undefined
+    }
+
+    // Background Color
+    let backgroundColor = await inputAction({
+      placeHolder: 'Background Color (Optional)',
+      prompt: 'The color of the background in hex format (RRGGBB or RGB)',
+      regex: '^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+      invalid: 'The color must be 6-digit (RRGGBB) or 3-digit (RGB) hex format'
+    })
+
+    if (typeof(backgroundColor) === 'undefined') {
+      return undefined
+    }
+
+    // Text Color
+    let textColor = await inputAction({
+      placeHolder: 'Text Color (Optional)',
+      prompt: 'The color of the text in hex format (RRGGBB or RGB)',
+      regex: '^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+      invalid: 'The color must be 6-digit (RRGGBB) or 3-digit (RGB) hex format'
+    })
+
+    // Choose image type
+    let imageType = await selectAction({
+      placeHolder: 'Image Type',
+      items: ['.gif (default)', '.jpg', '.png']
+    })
+
+    if (typeof(imageType) === 'undefined') {
+      return undefined
+    }
+
+    // Build the URL
+    let url = 'https://dummyimage.com'
+
+    url += `/${width}`
+
+    if (height !== '') {
+      url += `x${height}`
+    }
+
+    if (backgroundColor !== '') {
+      url += `${backgroundColor}`
+    }
+
+    if (textColor !== '') {
+      // You cannot specify text color without a background color
+      if (backgroundColor === '') {
+        url += `/cccccc`
+      }
+
+      url += `/${textColor}`
+    }
+
+    if (imageType !== '.gif (default)') {
+      url += imageType
+    }
+
+    if (text !== '') {
+      url += `?text=${encodeURIComponent(text)}`
     }
 
     return url
