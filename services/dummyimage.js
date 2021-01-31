@@ -62,6 +62,10 @@ module.exports = {
       invalid: 'The color must be 6-digit (RRGGBB) or 3-digit (RGB) hex format'
     })
 
+    if (typeof(textColor) === 'undefined') {
+      return undefined
+    }
+
     // Choose image type
     let imageType = await selectAction({
       placeHolder: 'Image Type',
