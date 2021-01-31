@@ -1,98 +1,127 @@
+const inputAction = require('../actions/input')
+const selectAction = require('../actions/select')
+
 module.exports = {
-  label: 'Fake Images Please',
-  description: 'http://fakeimg.pl',
-  attributes: {
-    width: {
-      placeHolder: 'Width?',
-      action: 'input',
+  label: 'Fake Images Please?',
+  description: 'https://fakeimg.pl',
+  generateUrl: async function() {
+    // Image Width
+    let width = await inputAction({
+      required: true,
+      placeHolder: 'Width',
+      prompt: 'Width of the image',
       regex: '^\\d+$',
-      required: true
-    },
-    height: {
-      placeHolder: 'Height?',
-      action: 'input',
-      regex: '^\\d+$'
-    },
-    text: {
-      placeHolder: 'Text?',
-      action: 'input',
-      regex: '^.+$'
-    },
-    textColor: {
-      placeHolder: 'Text Color (#RRGGBB or #RGB)?',
-      action: 'input',
-      regex: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
-    },
-    textAlpha: {
-      placeHolder: 'Text Alpha (0-255)?',
-      action: 'input',
-      regex: '^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$'
-    },
-    backgroundColor: {
-      placeHolder: 'Background Color (#RRGGBB or #RGB)?',
-      action: 'input',
-      regex: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
-    },
-    backgroundAlpha: {
-      placeHolder: 'Background Alpha (0-255)?',
-      action: 'input',
-      regex: '^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$'
-    },
-    font: {
-      placeHolder: 'Choose a font?',
-      action: 'select',
-      items: [{
-        label: 'Lobster'
-      }, {
-        label: 'Bebas'
-      }, {
-        label: 'Museo'
-      }]
+      invalid: 'Image width must be a whole number (integer)'
+    })
+
+    if (typeof(width) === 'undefined') {
+      return undefined
     }
-  },
-  format: function () {
-    const attr = this.attributes
 
-    let url = 'http://fakeimg.pl/'
+    // Image Height
+    let height = await inputAction({
+      placeHolder: 'Height (Optional)',
+      prompt: 'Height of the image (optional)',
+      regex: '^\\d+$',
+      invalid: 'Image height must be a whole number (integer)'
+    })
 
-    // Width
-    url += attr.width.value
+    if (typeof(height) === 'undefined') {
+      return undefined
+    }
 
-    // Height
-    if (attr.height.value) {
-      url += 'x' + attr.height.value
+    // Text
+    let text = await inputAction({
+      placeHolder: 'Text (Optional)',
+      prompt: 'Optional text on the image',
+      regex: '^.+$',
+      invalid: 'The text must be any alphanumeric characters'
+    })
+
+    if (typeof(text) === 'undefined') {
+      return undefined
     }
 
     // Background Color
-    if (attr.backgroundColor.value) {
-      url += '/' + attr.backgroundColor.value
-      if (attr.backgroundAlpha.value) {
-        url += ',' + attr.backgroundAlpha.value
-      }
+    let backgroundColor = await inputAction({
+      placeHolder: 'Background Color (Optional)',
+      prompt: 'The color of the background in hex format (RRGGBB or RGB)',
+      regex: '^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+      invalid: 'The color must be 6-digit (RRGGBB) or 3-digit (RGB) hex format'
+    })
+
+    if (typeof(backgroundColor) === 'undefined') {
+      return undefined
+    }
+
+    // Background Alpha Color
+    let backgroundAlpha = await inputAction({
+      placeHolder: 'Background Alpha Color (Optional)',
+      prompt: 'The background alpha color (0-255)',
+      regex: '^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$',
+      invalid: 'The alpha color must be between 0-255'
+    })
+
+    if (typeof(backgroundAlpha) === 'undefined') {
+      return undefined
     }
 
     // Text Color
-    if (attr.textColor.value) {
-      url += '/' + attr.textColor.value
-      if (attr.textAlpha.value) {
-        url += ',' + attr.textAlpha.value
+    let textColor = await inputAction({
+      placeHolder: 'Text Color (Optional)',
+      prompt: 'The color of the text in hex format (RRGGBB or RGB)',
+      regex: '^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+      invalid: 'The color must be 6-digit (RRGGBB) or 3-digit (RGB) hex format'
+    })
+
+    if (typeof(textColor) === 'undefined') {
+      return undefined
+    }
+
+    // Text Alpha Color
+    let textAlpha = await inputAction({
+      placeHolder: 'Text Alpha Color (Optional)',
+      prompt: 'The text alpha color (0-255)',
+      regex: '^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$',
+      invalid: 'The alpha color must be between 0-255'
+    })
+
+    if (typeof(textAlpha) === 'undefined') {
+      return undefined
+    }
+
+    // Build the URL
+    let url = 'https://fakeimg.pl'
+
+    url += `/${width}`
+
+    if (height !== '') {
+      url += `x${height}`
+    }
+
+    if (backgroundColor !== '') {
+      url += `${backgroundColor}`
+
+      if (backgroundAlpha !== '') {
+        url += `,${backgroundAlpha}`
       }
     }
 
-    let params = []
+    if (textColor !== '') {
+      // You cannot specify text color without a background color
+      if (backgroundColor === '') {
+        url += `/cccccc`
+      }
 
-    // Text
-    if (attr.text.value) {
-      params.push('text=' + encodeURIComponent(attr.text.value))
+      url += `/${textColor}`
+
+      if (textAlpha !== '') {
+        url += `,${textAlpha}`
+      }
     }
 
-    // Font
-    if (attr.font.value) {
-      params.push('font=' + attr.font.value)
-    }
-
-    if (params.length > 0) {
-      url += '?' + params.join('&')
+    if (text !== '') {
+      url += `?text=${encodeURIComponent(text)}`
     }
 
     return url
