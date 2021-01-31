@@ -1,62 +1,109 @@
+const inputAction = require('../actions/input')
+const booleanAction = require('../actions/boolean')
+const selectAction = require('../actions/select')
+
 module.exports = {
   label: 'placeholder.com',
   description: 'https://placeholder.com',
-  attributes: {
-    width: {
-      placeHolder: 'Width?',
-      action: 'input',
+  generateUrl: async function () {
+    // Image Width
+    let width = await inputAction({
+      required: true,
+      placeHolder: 'Width',
+      prompt: 'Width of the image',
       regex: '^\\d+$',
-      required: true
-    },
-    height: {
-      placeHolder: 'Height?',
-      action: 'input',
-      regex: '^\\d+$'
-    },
-    text: {
-      placeHolder: 'Text?',
-      action: 'input',
-      regex: '^.+$'
-    },
-    textColor: {
-      placeHolder: 'Text Color (#RRGGBB)?',
-      action: 'input',
-      regex: '^#([A-Fa-f0-9]{6})$'
-    },
-    backgroundColor: {
-      placeHolder: 'Background Color (#RRGGBB)?',
-      action: 'input',
-      regex: '^#([A-Fa-f0-9]{6})$'
-    }
-  },
-  format: function () {
-    const attr = this.attributes
-    let url = 'https://via.placeholder.com/'
+      invalid: 'Image width must be a whole number (integer)'
+    })
 
-    // Width
-    url += attr.width.value
-
-    // Height
-    if (attr.height.value) {
-      url += 'x' + attr.height.value
+    if (typeof(width) === 'undefined') {
+      return undefined
     }
 
-    // Background Color
-    if (attr.backgroundColor.value) {
-      url += '/' + attr.backgroundColor.value.replace('#', '')
-    }
+    // Image Height
+    let height = await inputAction({
+      placeHolder: 'Height (Optional)',
+      prompt: 'Height of the image (optional)',
+      regex: '^\\d+$',
+      invalid: 'Image height must be a whole number (integer)'
+    })
 
-    // Text Color
-    if (attr.textColor.value) {
-      if (!attr.backgroundColor.value) {
-        url += '/'
-      }
-      url += '/' + attr.textColor.value.replace('#', '')
+    if (typeof(height) === 'undefined') {
+      return undefined
     }
 
     // Text
-    if (attr.text.value) {
-      url += '?text=' + encodeURIComponent(attr.text.value)
+    let text = await inputAction({
+      placeHolder: 'Text (Optional)',
+      prompt: 'Optional text on the image',
+      regex: '^.+$',
+      invalid: 'The text must be any alphanumeric characters'
+    })
+
+    if (typeof(text) === 'undefined') {
+      return undefined
+    }
+
+    // Background Color
+    let backgroundColor = await inputAction({
+      placeHolder: 'Background Color (Optional)',
+      prompt: 'The color of the background in hex format (RRGGBB)',
+      regex: '^([A-Fa-f0-9]{6})$',
+      invalid: 'The color must be 6-digit hex format'
+    })
+
+    if (typeof(backgroundColor) === 'undefined') {
+      return undefined
+    }
+
+    // Text Color
+    let textColor = await inputAction({
+      placeHolder: 'Text Color (Optional)',
+      prompt: 'The color of the text in hex format (RRGGBB)',
+      regex: '^([A-Fa-f0-9]{6})$',
+      invalid: 'The color must be 6-digit hex format'
+    })
+
+    if (typeof(textColor) === 'undefined') {
+      return undefined
+    }
+
+    // Choose image type
+    let imageType = await selectAction({
+      placeHolder: 'Image Type',
+      items: ['.gif (default)', '.jpg', '.png']
+    })
+
+    if (typeof(imageType) === 'undefined') {
+      return undefined
+    }
+
+    // Build the URL
+    let url = 'https://via.placeholder.com'
+
+    url += `/${width}`
+
+    if (height !== '') {
+      url += `x${height}`
+    }
+
+    if (backgroundColor !== '' || textColor !== '') {
+      url += `/`
+    }
+
+    if (backgroundColor !== '') {
+      url += `${backgroundColor}`
+    }
+
+    if (textColor !== '') {
+      url += `/${textColor}`
+    }
+
+    if (imageType !== '.gif (default)') {
+      url += imageType
+    }
+
+    if (text !== '') {
+      url += `?text=${encodeURIComponent(text)}`
     }
 
     return url
