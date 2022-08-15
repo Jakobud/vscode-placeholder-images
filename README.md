@@ -14,6 +14,7 @@ Generate and insert placeholder images into your HTML in Visual Studio Code usin
 - [Placekitten](http://placekitten.com)
 - [Placeskull](http://placeskull.com)
 - [Unsplash](https://unsplash.it/)
+- [Placecircle](https://elouwerse.nl/placecircle/)
 
 ## Features
 - Choose image width, height, text, colors and more
@@ -29,6 +30,8 @@ http://placehold.it/250x120?text=hello+world
 http://placeskull.com/170/170
 
 http://lorempixel.com/200/300/sports/foobar
+
+https://elouwerse.nl/placecircle/200
 
 ## Visual Studio Code Commands
 
