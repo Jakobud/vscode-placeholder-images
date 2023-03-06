@@ -15,7 +15,8 @@
     "images",
     "lorem",
     "placehold.it",
-    "unsplash"
+    "unsplash",
+    "placecircle"
   ],
   "repository": {
     "type": "git",
